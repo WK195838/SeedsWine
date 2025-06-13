@@ -1,0 +1,689 @@
+     H****************************************************************
+     H*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    *
+     H*                                                              *
+     H*    PROGRAM-ID   : INT021                                     *
+     H*    PROGRAM NAME :調撥單批次處理                            *
+     H*    AUTHOR       : CAROL                                      *
+     H*    CREATE DATE  : 109/10/23                                  *
+     H*    UPDATE DATE  :                                            *
+     H*    SYSTEM       :採購管理                                  *
+     A*===============================================================
+     A* MODI CODE |   DATE   | DESCRIPTION
+     A*---------------------------------------------------------------
+      * 001 A1491 981111  修改指送單(1)修改分開客訂單
+     A*00B需求單號: 1090200                                        *
+     A*00B 2020/02/20 CAROL陳列增加運送方式，直走陳列              *
+     A*---------------------------------------------------------------
+     H****************************************************************
+     F*SCWK01  IP  E           K        DISK
+     F*MANCPF  IF  E           K        DISK
+     FSEHALF04IF  E           K        DISK
+     F            HA0                               KRENAMEHAX0
+     FSEHALF05IF  E           K        DISK
+     F            HA0                               KRENAMEHAY0
+     FUTL6PF  IF  E           K        DISK
+     FMANEPF  IF  E           K        DISK
+     FMANIPF  IF  E           K        DISK
+     F*POCEPF  UF  E           K        DISK
+     F*           CE0                               KRENAMECEX
+     F*POCHPF  UF  E           K        DISK                      A
+     F*POCIPF  UF  E           K        DISK                      A
+     F*POCKPF  UF  E           K        DISK                      A
+     FSEHAPFX UF  E           K        DISK                      A
+     FINTCPF  O   E           K        DISK
+     FINTDPF  O   E           K        DISK
+     E*---------------------------------------------------------------
+     E                    @L6        31  1
+     I*CE0
+     I*                                              CD01  L1
+     I*                                              CD02  L1
+     I*                                              CE02  L1
+     I*                                              CD04  L1
+     I*                                              CD07  L1
+     I*                                              CD06  L1
+     I*DATA AREA
+     IHAX0
+     I              HA01                            XHA01
+     I              HA02                            XHA02
+     I              HA03                            XHA03
+     I              HA04                            XHA04
+     I              HA05                            XHA05
+     I              HA06                            XHA06
+     I              HA09                            XHA09
+     I              HA10                            XHA10
+     IHAY0
+     I              HA01                            YHA01
+     I              HA02                            YHA02
+     I              HA03                            YHA03
+     I              HA04                            YHA04
+     I              HA05                            YHA05
+     I              HA06                            YHA06
+     I              HA09                            YHA09
+     I              HA10                            YHA10
+     IPTDA01      DS
+     I                                        1   1 DFMT
+     I                                        2   2 DTYPE
+     I*
+     I           UDS
+     I                                      101 110 $USER
+     I                                      119 1240$ADMDY
+     I                                      201 2080$EG8
+     I                                      125 1270$CPY
+     I                                      217 218 $PRTCD
+     I                                      219 219 $PENV
+     I                                      500 500 $DATA
+     I*
+     I*                                     501 5080DATE
+     I*                                     511 5180DATE1
+     I*                                     505 5120DHA03
+     I*                                     505 5100WHA03
+      *
+ 001+I*                                     601 613 DTC05
+      *
+     I            DS
+     I                                        1   80DATE1
+     I                                        1   60D1YM
+     I                                        7   80D1DAY
+     I            DS
+     I                                        1   62TEMP
+     I                                        5   62QTEMP
+     I            DS
+     I                                        1  30 APPSRC
+     I                                        1   2 STC01
+     I                                        3   4 STC02
+     I                                        5   9 SNE05
+     I                                       10  170STD10
+     I                                       18  30 STC05
+      *+001+
+     C*==============================================================*
+     C*          IDENTIFY A PARAMETER LIST
+     C*==============================================================*
+     C*          *ENTRY    PLIST
+     C*                    PARM           CHOOSE  2
+     C*==============================================================*
+     C*                    DEFN
+     C*==============================================================*
+     C           *NAMVAR   DEFN           PTDA01
+     C           *LIKE     DEFN APPSRC    APGSRC
+     C*==============================================================*
+     C*                    KEY LIST
+     C*==============================================================*
+      *
+     C           KEYNE     KLIST
+     C                     KFLD           STC01
+     C                     KFLD           STC02
+     C*          KEYCK     KLIST
+     C*                    KFLD           CK01
+     C*                    KFLD           CK02
+     C*                    KFLD           CK03
+     C*                    KFLD           CK05
+     C*                    KFLD           CK08
+     C*                    KFLD           CK06
+     C*                    KFLD           CK10
+      *+001+
+     C*          KEYCK1    KLIST
+     C*                    KFLD           CK01
+     C*                    KFLD           CK02
+     C*                    KFLD           CK03
+     C*                    KFLD           CK05
+     C*                    KFLD           CK08
+     C*                    KFLD           CK06
+     C*                    KFLD           CK10
+     C*                    KFLD           CK18
+      *+001+
+     C           KEYU6     KLIST
+     C                     KFLD           STC01
+     C                     KFLD           STC02
+     C                     KFLD           NE03
+     C                     KFLD           WYM
+     C           KEYNI     KLIST
+     C                     KFLD           STC01
+     C                     KFLD           STC02
+     C                     KFLD           NE03
+     C           KEYTC     KLIST
+     C                     KFLD           STC01            公司別
+     C                     KFLD           STC02            通路別
+     C                     KFLD           NE03             分店代號
+     C           KEYHA     KLIST
+     C                     KFLD           STC01            公司別
+     C                     KFLD           STC02            通路別
+     C                     KFLD           NE03             分店代號
+     C                     KFLD           DATE             銷售起日
+     C           KEYHA1    KLIST
+     C                     KFLD           STC01            公司別
+     C                     KFLD           STC02            通路別
+     C                     KFLD           NE03             分店代號
+     C                     KFLD           WHA05            產品代號
+     C                     KFLD           XHA03            銷售日期
+     C           KEYHA2    KLIST
+     C                     KFLD           STC01            公司別
+     C                     KFLD           STC02            通路別
+     C                     KFLD           NE03             分店代號
+     C                     KFLD           WHA05            產品代號
+     C           KEYHA3    KLIST
+     C                     KFLD           STC01            公司別
+     C                     KFLD           STC02            通路別
+     C                     KFLD           NE03             分店代號
+     C                     KFLD           WHA03            銷售起日
+     C                     KFLD           WHA05            產品代號
+     C           KEYHAX    KLIST
+     C                     KFLD           XHA01
+     C                     KFLD           XHA02
+     C                     KFLD           XHA03
+     C                     KFLD           XHA04
+     C                     KFLD           XHA05
+     C*          KEYCE     KLIST
+     C*                    KFLD           CE01
+     C*                    KFLD           CE02
+     C*                    KFLD           CE03
+      *
+     C*==============================================================*
+     C*                    MAIN ROUTINE
+     C*==============================================================*
+     C* N10                EXSR RTN010
+     C                     EXSR RTN010
+     C*KEYNE(公司別+通路別)
+     C           KEYNE     SETLLNE0
+     C           KEYNE     READENE0                      41
+     C           *IN41     DOWEQ'0'
+     C*判斷分店有人日條件
+     C                     EXSR RTN030
+     C           *IN99     IFEQ '0'
+     C           T004O3    ANDEQ'1'
+     C*取銷售天數
+     C                     EXSR RTN050
+     C*計算調撥數量
+     C           DNI04     IFNE 0
+     C                     EXSR RTN300
+     C                     END
+     C                     END
+     C*
+     C           KEYNE     READENE0                      41
+     C                     END
+     C*
+     C                     SETON                     LR
+     C*
+     C*                    EXSR RTN100
+     C*
+     C*LR 10                EXSR RTN890
+      *沒有資料
+     C*LRN10                EXSR RTN899
+     C*==============================================================*
+     C*          RTN010... INITIAL
+     C*==============================================================*
+01===C           RTN010    BEGSR
+|    C*
+|    C*                    SETON                     1039
+|    C                     MOVEL'Y'       $DATA
+|    C                     Z-ADD$EG8      DATE1            日期YYYYMMDD
+|    C                     Z-ADD0         DATE    80       日期YYYYMMDD
+|    C                     MOVEL'S1'      STC01     P
+|    C                     MOVEL'W1'      STC02     P
+|    C                     MOVEL'M1'      CHOOSE  2 P
+|    C                     MOVEL*BLANK    WNE03   5
+|     *
+|    C*                    MOVEL*BLANK    SCD01
+|    C*                    MOVEL*BLANK    SCD02
+|    C*                    MOVEL*BLANK    SCE02
+|    C*                    MOVEL*BLANK    SCD04
+|    C*                    Z-ADD*ZERO     SCD07
+|    C*                    MOVEL*BLANK    SCD06
+|    C*                    MOVEL*BLANK    SCE01
+|     *
+01===C                     ENDSR
+     C*==============================================================*
+     C*          RTN020... INITIAL
+     C*==============================================================*
+01===C           RTN020    BEGSR
+|     *
+| 01-C           CHOOSE    IFEQ 'M1'
+|    *先取得調撥單號
+|   C                     EXSR RTN200
+|    *
+| 01*C*                    ELSE
+| 02-C*          DCK05     IFEQ *BLANK
+|   C*                    EXSR RTN200
+| 02-C*                    ENDIF
+|    *
+| 01-C                     ENDIF
+|     *
+01===C                     ENDSR
+     C*==============================================================*
+     C*          RTN100... DETAIL
+     C*==============================================================*
+02===C*          RTN100    BEGSR
+|     *
+|    C*                    EXSR RTN040
+| 01-C*          APPSRC    IFNE APGSRC
+|   C*                    SETON                     98
+|   C*                    MOVELAPPSRC    APGSRC
+| 01*C*                    ELSE
+|   C*                    SETOF                     98
+| 01-C*                    ENDIF
+|     *
+| 02-C*          *IN98     IFEQ '1'
+|   C*                    EXSR RTN210
+|   C*                    MOVELDCH04     CH04
+|   C*          DCH04     CHAINCH0                  40
+|   C*                    EXSR RTN220
+|   C* N40                UPDATCH0
+|   C*  40                WRITECH0
+|   C*                    EXSR RTN230
+| 02*C*                    ELSE
+|   C*                    EXSR RTN230
+| 02-C*                    ENDIF
+|     *
+|     *寫入供應商出貨箱數檔
+| 03-C*                    SELEC
+|    *客訂單由供應商直送不經過貨運
+|   C*          CD06      WHEQ 'R2'
+|   C*          CD11      ANDEQ'2'
+|   C*          CD06      OREQ 'R2'
+|   C*          CD11      ANDEQ'3'
+|00B+C*          CD06      OREQ 'R3'
+|00B+C*          CD11      ANDEQ'3'
+|   C*                   不列入箱數檔，因此不處理
+|   C*
+|    *客訂單由供應商經貨運到客戶，列入直（指）送
+|   C*          CD06      WHEQ 'R2'
+|   C*          CD11      ANDEQ'1'
+|   C*                    MOVEL'1'       EA      1        直（指）送
+|   C*                    EXSR RTN240
+|   C*                    OTHER
+|    *其他訂單且經過貨運，列入一般
+|   C*                    MOVEL'2'       EA
+|   C*                    EXSR RTN240
+| 03-C*                    ENDSL
+|     *回寫訂貨單明細檔(採購單號)
+|    C*          KEYCE     CHAINCEX                  40
+|    C* N40                MOVELDCH04     CE06
+|    C* N40                UPDATCEX
+|     *
+02===C*                    ENDSR
+     C*==============================================================*
+     C*          RTN030...判斷分店有人日條件
+     C*==============================================================*
+03===C           RTN030    BEGSR
+|     *
+|    C                     MOVELD1YM      WYM     60       日期YYYYMM
+|    C                     SETOF                     99
+|     *
+|     *CHECK休假日檔當月資料是否存在
+|    C           KEYU6     CHAINL60                  40
+|    C           *IN40     IFEQ '0'
+|    C                     MOVEAL605      @L6              年月份
+|     *CHECK休假日檔 當日資料是否為上班日
+|    C           @L6,D1DAY IFEQ 'V'
+|    C*          @L6,D1DAY ANDNE'A'
+|    C*          @L6,D1DAY ANDNE' '
+|    C                     MOVEL'1'       T004O3  1
+|    C                     ELSE
+|    C                     MOVEL'3'       T004O3
+|    C                     ENDIF
+|     *
+|    C                     ELSE
+|    C                     SETON                     99
+|    C                     ENDIF
+|     *
+03===C                     ENDSR
+     C*==============================================================*
+     C*          RTN040...判斷採購跳號條件
+     C*==============================================================*
+03===C*          RTN040    BEGSR
+|     *
+|    C*                    MOVELCD01      SCD01
+|    C*                    MOVELCD02      SCD02
+|    C*                    MOVELCE02      SCE02
+|    C*                    MOVELCD04      SCD04
+| 01-C*          CD06      IFEQ 'R2'
+|   C*          CD11      ANDEQ'2'
+|   C*          CD06      OREQ 'R2'
+|   C*          CD11      ANDEQ'3'
+|00B+C*          CD06      OREQ 'R3'
+|00B+C*          CD11      ANDEQ'3'
+|   C*                    Z-ADDCD08      SCD07
+| 01*C*                    ELSE
+|   C*                    Z-ADDCD07      SCD07
+| 01-C*                    ENDIF
+|    C*                    MOVELCD06      SCD06
+|     *
+| 02-C*          CD06      IFEQ 'R2'
+|   C*                    MOVELCE01      SCE01
+| 02*C*                    ELSE
+|   C*                    MOVEL*BLANK    SCE01
+| 02-C*                    ENDIF
+|     *
+03===C*                    ENDSR
+     C*==============================================================*
+     C*          RTN050...取得銷售天數
+     C*==============================================================*
+03===C           RTN050    BEGSR
+|     *
+|     *CHECK分店銷售天數檔資料是否存在
+|    C           KEYNI     CHAINNI0                  40
+|    C           *IN40     IFEQ '0'
+|    C                     Z-ADDNI04      DNI04   20       銷售天數
+|    C                     ELSE
+|    C                     Z-ADD0         DNI04            銷售天數
+|    C                     ENDIF
+|     *
+03===C                     ENDSR
+     C*==============================================================*
+     C*          RTN200...取得調撥號碼
+     C*==============================================================*
+04===C           RTN200    BEGSR
+|     *
+|    C                     MOVEL*BLANK    DTC05  13
+|     *
+|    C                     CALL 'GET001'
+|    C                     PARM STC01     T003I1  2        公司別
+|    C                     PARM CHOOSE    T003I2  2        單別
+|    C                     PARM WYM       T003I4  60       日期YYYYMM
+|    C           DTC05     PARM           T003O1 13
+|     *
+04===C                     ENDSR
+     C*==============================================================*
+     C*          RTN300...計算調撥數量 READ SEHAPF
+     C*==============================================================*
+03===C           RTN300    BEGSR
+|     *
+|     *往前推算日期起DATE 迄DATE1
+|    C           DNI04     MULT -1        DAYS    40
+|    C                     CALL 'P37'
+|    C                     PARM DATE1     P3701I  80
+|    C                     PARM '2'       P3702I  1
+|    C                     PARM '1'       P3703I  1
+|    C                     PARM DAYS      P3704I  40
+|    C           DATE      PARM           P3711O  80
+|     * KEYHA(公司別+通路別+分店+DATE)
+|    C           KEYHA     SETLLHAX0
+|    C           KEYTC     READEHAX0                     44
+| 01-C           *IN44     DOWEQ'0'
+|    C                     MOVELXHA03     WHA03   80
+|    C                     MOVEL*BLANK    WHA05   9
+|    C                     Z-ADD0         WTD03   50
+|     * 檢核是否轉單
+|    C           KEYHAX    CHAINHA0                  40
+| 02-C           *IN40     IFEQ '1'
+|    C                     MOVELXHA05     WHA05
+|     *KEYHA1(公司別+通路別+分店+產品)
+|    C           KEYHA1    SETLLHAY0
+|    C           KEYHA2    READEHAY0                     45
+| 04-C           *IN45     DOWEQ'0'
+|     * 檢核銷售日期
+| 04-C           YHA03     IFGE DATE
+| 03-C           YHA03     ANDLTDATE1
+|    C                     ADD  YHA06     WTD03
+|    C                     EXSR RTN400
+| 03-C                     END
+|    C           KEYHA2    READEHAY0                     45
+| 04-C                     END
+| 06-C           NE03      IFNE WNE03
+|    C                     MOVELNE03      WNE03     P
+|    C*取調撥單號
+|    C                     EXSR RTN020
+|    C                     MOVELXHA01     TC01      P
+|    C                     MOVELXHA02     TC02      P
+|    C                     Z-ADDDATE1     TC03
+|    C                     MOVEL'W999'    TC04      P
+|    C                     MOVELDTC05     TC05      P
+|    C                     Z-ADD0         TC06
+|    C                     MOVELNE03      TC07      P
+|    C                     MOVEL'B'       TC08      P
+|    C                     MOVEL'O'       TC09      P
+|    C                     MOVEL*BLANK    TC10      P
+|    C                     WRITETC0
+| 06-C                     END
+| 07-C           WTD03     IFNE 0
+|    C                     MOVELDTC05     TD01      P
+|    C                     MOVELWHA05     TD02      P
+|    C                     Z-ADDWTD03     TD03
+|    C                     Z-ADD0         TD04
+|    C                     MOVELXHA01     TD05      P
+|    C                     MOVELXHA02     TD06      P
+|    C                     MOVEL'W999'    TD07      P
+|    C                     MOVELNE03      TD08      P
+|    C                     Z-ADDDATE1     TD09
+|    C                     Z-ADD0         TD10
+|    C                     MOVEL'O'       TD11      P
+|    C                     MOVEL*BLANK    TD12      P
+|    C                     WRITETD0
+| 07-C                     END
+|    C           KEYHA3    SETLLHAX0
+|    C*                    READ HAX0                     45
+| 02-C                     END
+|    C           KEYTC     READEHAX0                     44
+| 01-C                     END
+03===C                     ENDSR
+     C*==============================================================*
+     C*          RTN400...回寫紀錄銷單 READ SEHAPF WRITE SEHAPFX
+     C*==============================================================*
+03===C           RTN400    BEGSR
+|    C*
+|    C                     MOVELYHA01     HA01      P
+|    C                     MOVELYHA02     HA02      P
+|    C                     Z-ADDYHA03     HA03
+|    C                     MOVELYHA04     HA04      P
+|    C                     MOVELYHA05     HA05      P
+|    C                     Z-ADDYHA06     HA06
+|    C                     MOVELYHA09     HA09      P
+|    C                     MOVELYHA10     HA10      P
+|    C                     MOVEL'*'       HA11      P
+|    C                     Z-ADD$EG8      HAVV
+|    C                     MOVEL'INT021'  HAWW      P
+|    C                     Z-ADD$EG8      HAXX
+|    C                     TIME           HAYY
+|    C                     MOVEL$USER     HAZZ      P
+|    C                     WRITEHA0
+03===C                     ENDSR
+     C*==============================================================*
+     C*          RTN210...取得採購單號
+     C*==============================================================*
+05===C*          RTN210    BEGSR
+|     *
+| 01-C*                    SELEC
+|   C*          CD06      WHEQ 'R1'
+|   C*                    MOVEL'P1'      DCH05   2
+|   C*          CD06      WHEQ 'R2'
+|   C*                    MOVEL'P2'      DCH05
+|   C*          CD06      WHEQ 'R3'
+|   C*                    MOVEL'P3'      DCH05
+| 01-C*                    ENDSL
+|    C*
+|    C*                    MOVEL*BLANK    DCH04  13
+|    C*
+|    C*                    CALL 'GET001'
+|    C*                    PARM CD01      T001I1  2
+|    C*                    PARM DCH05     T001I2  2
+|    C*                    PARM DDATE     T001I3  60
+|    C*          DCH04     PARM           T001O1 13
+|     *
+05===C*                    ENDSR
+     C*==============================================================*
+     C*          RTN220... WRITE CH0
+     C*==============================================================*
+06===C*          RTN220    BEGSR
+|     *
+|    C*                    MOVELCD01      CH01
+|    C*                    MOVELCD02      CH02
+|    C*                    Z-ADD$EG8      CH03
+|    C*                    MOVELDCH05     CH05
+|    C*                    MOVELCE02      CH06
+|    C*                    MOVELCD04      CH07
+| 01-C*          CD06      IFEQ 'R2'
+|   C*          CD11      ANDEQ'2'
+|   C*          CD06      OREQ 'R2'
+|   C*          CD11      ANDEQ'3'
+|00B+C*          CD06      OREQ 'R3'
+|00B+C*          CD11      ANDEQ'3'
+|   C*                    Z-ADDCD08      CH08
+| 01*C*                    ELSE
+|   C*                    Z-ADDCD07      CH08
+| 01-C*                    ENDIF
+|    C*                    Z-ADDCD08      CH09
+|    C*                    MOVELCD09      CH10
+|    C*                    Z-ADDCD10      CH11
+|    C*                    MOVELCD11      CH12
+|    C*                    MOVEL*BLANK    CH13
+|    C*                    MOVEL*BLANK    CH14
+|    C*                    MOVEL*BLANK    CH15
+|    C*          CD06      IFEQ 'R2'
+|    C*                    MOVELCE01      CH16
+|    C*                    ENDIF
+|    C*                    Z-ADD$EG8      CHVV
+|    C*                    MOVEL'PUC021'  CHWW
+|    C*                    Z-ADD$EG8      CHXX
+|    C*                    TIME           CHYY
+|    C*                    MOVEL$USER     CHZZ
+|     *
+06===C*                    ENDSR
+     C*==============================================================*
+     C*          RTN230... WRITE CI0
+     C*==============================================================*
+07===C*          RTN230    BEGSR
+|     *
+|    C*                    MOVELDCH04     CI01
+|    C*                    MOVELCE02      CI02
+|    C*                    MOVELCE03      CI03
+|    C*          KEYCI     CHAINCI0                  40
+| 01-C*          *IN40     IFEQ '0'
+|   C*                    ADD  CE05      CI04
+|   C*                    MOVEL*BLANK    CI05
+|   C*                    MOVEL'PUC021'  CIWW
+|   C*                    Z-ADD$EG8      CIXX
+|   C*                    TIME           CIYY
+|   C*                    MOVEL$USER     CIZZ
+|   C*                    UPDATCI0
+| 01*C*                    ELSE
+|   C*                    Z-ADDCE05      CI04
+|   C*                    MOVEL*BLANK    CI05
+|   C*                    Z-ADD$EG8      CIVV
+|   C*                    MOVEL'PUC021'  CIWW
+|   C*                    Z-ADD$EG8      CIXX
+|   C*                    TIME           CIYY
+|   C*                    MOVEL$USER     CIZZ
+|   C*                    WRITECI0
+| 01-C*                    ENDIF
+|     *
+07===C*                    ENDSR
+     C*==============================================================*
+     C*          RTN240... WRITE CK0
+     C*==============================================================*
+08===C*          RTN240    BEGSR
+|     *
+|    C*                    MOVELCD01      CK01
+|    C*                    MOVELCD02      CK02
+|    C*                    MOVELDCK05     CK05
+|    C*                    MOVELCE02      CK08
+|    C*                    MOVELCD04      CK10
+|     *
+| 01-C*          EA        IFEQ '1'
+|   C*                    Z-ADDCD07      CK03             經大榮到客戶
+|   C*                    MOVEL'2'       CK06             指送
+|   C*                    MOVELCE01      CK18             訂單號碼
+| 01*C*                    ELSE
+|   C*                    MOVEL*BLANK    CK18             訂單號碼
+|   C*                    Z-ADDCD07      CK03             到貨運日
+|   C*                    MOVEL'1'       CK06             一般
+| 01-C*                    ENDIF
+|     *
+|    C*                    Z-ADD0         TEMP
+|     *
+|    C*          KEYNC     CHAINNC0                  40
+| 02-C*          *IN40     IFEQ '0'
+|   C*          CE05      DIV  NC17      TEMP
+| 03-C*          QTEMP     IFNE 0
+|   C*                    ADD  1         TEMP
+|   C*                    Z-ADD0         QTEMP
+| 03-C*                    ENDIF
+|   C*                    Z-ADDTEMP      DCK11   40
+| 02*C*                    ELSE
+|   C*          CE05      DIV  1         TEMP
+|   C*                    Z-ADDTEMP      DCK11
+| 02-C*                    ENDIF
+|     *
+| 04-C*          EA        IFEQ '2'
+|   C*          KEYCK     CHAINCK0                  40
+| 05-C*          *IN40     IFEQ '0'
+|   C*                    ADD  DCK11     CK11
+|   C*                    MOVEL'PUC021'  CKWW
+|   C*                    Z-ADD$EG8      CKXX
+|   C*                    TIME           CKYY
+|   C*                    MOVEL$USER     CKZZ
+|   C*                    UPDATCK0
+| 05*C*                    ELSE
+|   C*                    Z-ADDDCK11     CK11
+|   C*                    Z-ADDCD08      CK04
+|   C*          CE02      CHAINNB0                  40
+|   C* N40                MOVELNB15      CK07
+|   C*  40                MOVEL*BLANK    CK07
+|   C*          KEYNE     CHAINNE0                  40
+|   C* N40                MOVELNE15      CK09
+|   C*  40                MOVEL*BLANK    CK09
+|   C*                    Z-ADD0         CK12
+|   C*                    Z-ADD0         CK13
+|   C*                    Z-ADD0         CK14
+|   C*                    Z-ADD$EG8      CK15
+|   C*                    MOVELCD09      CK16
+|   C*                    MOVEL*BLANK    CK17
+|    *
+|   C*                    Z-ADD$EG8      CKVV
+|   C*                    MOVEL'PUC021'  CKWW
+|   C*                    Z-ADD$EG8      CKXX
+|   C*                    TIME           CKYY
+|   C*                    MOVEL$USER     CKZZ
+|   C*                    WRITECK0
+| 05-C*                    ENDIF
+| 04*C*                    ELSE
+|   C*          KEYCK1    CHAINCK0                  40
+| 06-C*          *IN40     IFEQ '0'
+|   C*                    ADD  DCK11     CK11
+|   C*                    MOVEL'PUC021'  CKWW
+|   C*                    Z-ADD$EG8      CKXX
+|   C*                    TIME           CKYY
+|   C*                    MOVEL$USER     CKZZ
+|   C*                    UPDATCK0
+| 06*C*                    ELSE
+|   C*                    Z-ADDDCK11     CK11
+|   C*                    Z-ADDCD08      CK04
+|   C*          CE02      CHAINNB0                  40
+|   C* N40                MOVELNB15      CK07
+|   C*  40                MOVEL*BLANK    CK07
+|   C*          KEYNE     CHAINNE0                  40
+|   C* N40                MOVELNE15      CK09
+|   C*  40                MOVEL*BLANK    CK09
+|   C*                    Z-ADD0         CK12
+|   C*                    Z-ADD0         CK13
+|   C*                    Z-ADD0         CK14
+|   C*                    Z-ADD$EG8      CK15
+|   C*                    MOVELCD09      CK16
+|   C*                    MOVEL*BLANK    CK17
+|    *
+|   C*                    Z-ADD$EG8      CKVV
+|   C*                    MOVEL'PUC021'  CKWW
+|   C*                    Z-ADD$EG8      CKXX
+|   C*                    TIME           CKYY
+|   C*                    MOVEL$USER     CKZZ
+|   C*                    WRITECK0
+| 06-C*                    ENDIF
+| 04-C*                    ENDIF
+|     *
+08===C*                    ENDSR
+     C*==============================================================*
+     C*          RTN890... LEVEL BREAK LR
+     C*==============================================================*
+09===C           RTN890    BEGSR
+|    C*
+|    C*
+09===C                     ENDSR
+     C*==============================================================*
+     C*          RTN899... LEVEL BREAK LR --- NO DATA
+     C*==============================================================*
+10===C           RTN899    BEGSR
+|    C*
+     C           $DATA     IFNE 'Y'
+|    C                     MOVEL'N'       $DATA
+     C                     ENDIF
+|    C*
+10===C                     ENDSR
+

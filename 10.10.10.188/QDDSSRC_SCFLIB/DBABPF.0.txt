@@ -1,0 +1,12 @@
+     A          R AB0
+     A*
+     A            AB01           9A         COLHDG('產品代號')
+     A            AB02          62O         COLHDG('品名')
+     A            AB03           8S 2       COLHDG('標準未稅成本')
+     A            AB04           9S 0       COLHDG('含稅銷售金額')
+     A            AB05           5S 0       COLHDG('銷售數量')
+     A            AB06           9S 0       COLHDG('含稅銷貨成本')
+     A            AB07           5S 2       COLHDG('活動進價%')
+     A*
+     A          K AB01
+

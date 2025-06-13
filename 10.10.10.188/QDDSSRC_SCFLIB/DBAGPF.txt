@@ -1,0 +1,12 @@
+     A          R AG0
+     A*
+     A            AG01          11A         COLHDG('家樂福CODE')
+     A            AG02           9A         COLHDG('產品代號')
+     A            AG03          62O         COLHDG('品名')
+     A            AG04           8S 0       COLHDG('活動日期起')
+     A            AG05           8S 0       COLHDG('活動日期迄')
+     A            AG06           9S 0       COLHDG('最低價格')
+     A            AG07           9S 0       COLHDG('獎金')
+     A*
+     A          K AG02
+

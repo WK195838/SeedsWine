@@ -1,0 +1,36 @@
+     A          R AM0
+     A*
+     A            AM01           5A         COLHDG('供應商代號')
+     A            AM02           9A         COLHDG('產品代號')
+     A*進貨數量
+     A            AM03A          7S 0       COLHDG('98')
+     A            AM03B          7S 0       COLHDG('99')
+     A            AM03C          7S 0       COLHDG('100')
+     A            AM03D          7S 0       COLHDG('101')
+     A            AM03E          7S 0       COLHDG('102')
+     A            AM03F          7S 0       COLHDG('103')
+     A*退貨數量
+     A            AM04A          7S 0       COLHDG('98')
+     A            AM04B          7S 0       COLHDG('99')
+     A            AM04C          7S 0       COLHDG('100')
+     A            AM04D          7S 0       COLHDG('101')
+     A            AM04E          7S 0       COLHDG('102')
+     A            AM04F          7S 0       COLHDG('103')
+     A*進貨金額
+     A            AM05A         11S 2       COLHDG('98')
+     A            AM05B         11S 2       COLHDG('99')
+     A            AM05C         11S 2       COLHDG('100')
+     A            AM05D         11S 2       COLHDG('101')
+     A            AM05E         11S 2       COLHDG('102')
+     A            AM05F         11S 2       COLHDG('103')
+     A*退貨金額
+     A            AM06A         11S 2       COLHDG('98')
+     A            AM06B         11S 2       COLHDG('99')
+     A            AM06C         11S 2       COLHDG('100')
+     A            AM06D         11S 2       COLHDG('101')
+     A            AM06E         11S 2       COLHDG('102')
+     A            AM06F         11S 2       COLHDG('103')
+     A*
+     A          K AM01
+     A          K AM02
+

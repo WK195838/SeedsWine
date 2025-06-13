@@ -1,0 +1,16 @@
+     A          R AL0
+     A*
+     A            AL01           5A         COLHDG('供應商代號')
+     A            AL02           5S 0       COLHDG('編號')
+     A            AL03           9A         COLHDG('產品代號')
+     A            AL04           8S 0       COLHDG('到貨運日')
+     A            AL05           5A         COLHDG('分店代號')
+     A            AL06           7S 0       COLHDG('進貨數量')
+     A            AL07           7S 0       COLHDG('退貨數量')
+     A            AL08           9S 2       COLHDG('未稅進價')
+     A            AL09          11S 2       COLHDG('未稅金額')
+     A            AL10          11S 2       COLHDG('含稅金額')
+     A*
+     A          K AL01
+     A          K AL03
+

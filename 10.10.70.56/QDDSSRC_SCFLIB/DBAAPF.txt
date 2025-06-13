@@ -1,0 +1,14 @@
+     A          R AA0
+     A*
+     A            AA01           9A         COLHDG('產品代號')
+     A            AA02          62O         COLHDG('品名')
+     A            AA03           8S 2       COLHDG('進價')
+     A            AA04           9S 0       COLHDG('售價')
+     A            AA05           8S 0       COLHDG('活動日期起')
+     A            AA06           8S 0       COLHDG('活動日期迄')
+     A            AA07          62O         COLHDG('備註')
+     A            AA08           2S 0       COLHDG('活動序號')
+     A*
+     A          K AA01
+     A          K AA05
+

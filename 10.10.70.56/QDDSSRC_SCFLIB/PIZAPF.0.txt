@@ -1,0 +1,24 @@
+     A*****************************************************************
+     A*          每月盤點主檔(PIZAPF)      KEY=ZA01+ZA02+ZA05
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R ZA0
+     A*
+     A            ZA01      R               COLHDG('公司別')
+     A            ZA02      R               COLHDG('通路代號')
+     A            ZA03      R               COLHDG('盤點日期')
+     A            ZA04      R               COLHDG('分店代號')
+     A            ZA05      R               COLHDG('盤點單號')
+     A            ZA06      R               COLHDG('單別')
+     A            ZA07      R               COLHDG('狀態碼')
+     A            ZAVV      R               COLHDG('建檔日期')
+     A            ZAWW      R               COLHDG('異動程式')
+     A            ZAXX      R               COLHDG('異動日期')
+     A            ZAYY      R               COLHDG('異動時間')
+     A            ZAZZ      R               COLHDG('異動者　')
+     A*
+     A          K ZA01
+     A          K ZA02
+     A          K ZA05
+

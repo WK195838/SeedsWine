@@ -1,0 +1,15 @@
+     A*****************************************************************
+     A*          調撥送貨紀錄檔(INTTPF)       KEY=CD05
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R TT0
+     A            TT01      R               COLHDG('調撥單號')
+     A            TTVV      R               COLHDG('建檔日期')
+     A            TTWW      R               COLHDG('異動程式')
+     A            TTXX      R               COLHDG('異動日期')
+     A            TTYY      R               COLHDG('異動時間')
+     A            TTZZ      R               COLHDG('異動者　')
+     A*
+     A          K TT01
+

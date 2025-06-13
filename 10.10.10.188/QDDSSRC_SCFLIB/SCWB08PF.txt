@@ -1,0 +1,17 @@
+     A*****************************************************************
+     A*    WEB盤點單工作檔 (SCWB08PF)     KEY=WB0801+WB0802
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R WB08
+     A            WB0801    R               COLHDG('人員代號')
+     A                                      REFFLD(NF01)
+     A            WB0802    R               COLHDG('產品代號')
+     A                                      REFFLD(CE03)
+     A            WB0803    R               COLHDG('盤點數量')
+     A                                      REFFLD(CE04)
+     A            WB0804    R               COLHDG('供應商代號')
+     A                                      REFFLD(CE02)
+     A          K WB0801
+     A          K WB0802
+

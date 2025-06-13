@@ -1,0 +1,32 @@
+     A*****************************************************************
+     A*    WEB盤點單工作檔 (SCWB09PF)     KEY=WB0901+WB0902+WB0903
+     A*                                        +WB0904
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R WB09
+     A            WB0901    R               COLHDG('公司別')
+     A                                      REFFLD(NC01)
+     A            WB0902    R               COLHDG('通路代號')
+     A                                      REFFLD(ND02)
+     A            WB0903    R               COLHDG('分店代號')
+     A                                      REFFLD(NE03)
+     A            WB0904    R               COLHDG('產品代號')
+     A                                      REFFLD(CE03)
+     A            WB0905    R               COLHDG('盤點日期')
+     A                                      REFFLD(CD03)
+     A            WB0906    R               COLHDG('盤點數量')
+     A                                      REFFLD(CE04)
+     A            WB0907    R               COLHDG('供應商代號')
+     A                                      REFFLD(CE02)
+     A            WB0908    R               COLHDG('產品名稱')
+     A                                      REFFLD(NC04)
+     A            WB0909    R               COLHDG('帳列庫存量')
+     A                                      REFFLD(TA06)
+     A            WB0910    R               COLHDG('陳列庫存量')
+     A                                      REFFLD(TA06)
+     A          K WB0901
+     A          K WB0902
+     A          K WB0903
+     A          K WB0904
+

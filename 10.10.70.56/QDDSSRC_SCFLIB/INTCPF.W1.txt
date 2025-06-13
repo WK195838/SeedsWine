@@ -1,0 +1,36 @@
+     A*****************************************************************
+     A*          存貨調撥主檔(INTCPF)      KEY=TC05
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R TC0
+     A            TC01      R               COLHDG('公司別')
+     A            TC02      R               COLHDG('通路代號')
+     A            TC03      R               COLHDG('調出日期')
+     A            TC04      R               COLHDG('出貨分店代號')
+     A            TC05      R               COLHDG('調撥單號')
+     A            TC06      R               COLHDG('入庫日期')
+     A            TC07      R               COLHDG('收貨分店代號')
+     A            TC08      R               COLHDG('單據來源')
+     A*                                     'F'-前台單據('C1')
+W002+A*                                     FROM INT001
+     A*                                     'B'-後台單據(KEY IN)
+W200+A*                                     'S'-系統單據('W1')
+W002+A*                                     FROM PUC050
+     A            TC09      R               COLHDG('狀態碼')
+W200 A*                                     'O'-調出待驗('C1')
+W200+A*                                     'O'-調出待核准('W1')
+W200+A*                                     'S'-調出已核准待驗('W1')
+     A*                                     'R'-驗收
+     A*                                     'P'-庫存處理
+     A            TC10      R               COLHDG('在途處理')
+     A*                                     ' '-空白
+     A*                                     'T'-在途處理
+     A            TCVV      R               COLHDG('建檔日期')
+     A            TCWW      R               COLHDG('異動程式')
+     A            TCXX      R               COLHDG('異動日期')
+     A            TCYY      R               COLHDG('異動時間')
+     A            TCZZ      R               COLHDG('異動者　')
+      *
+     A          K TC05
+

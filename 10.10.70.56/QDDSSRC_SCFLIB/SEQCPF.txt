@@ -1,0 +1,10 @@
+     A          R QC0
+     A*
+     A            QC01           9A         COLHDG('產品代號')
+     A            QC02           2S         COLHDG('活動序號')
+     A            QC03           8S 2       COLHDG('活動未稅成本')
+     A            QC04           5S 0       COLHDG('活動銷售數量')
+     A*
+     A          K QC01
+     A          K QC02
+

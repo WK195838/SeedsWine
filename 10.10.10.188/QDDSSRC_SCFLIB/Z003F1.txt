@@ -1,0 +1,15 @@
+     A          R WF0
+     A*
+     A            WF01           2A         COLHDG('公司別')
+     A            WF02           6S 0       COLHDG('年月')
+     A            WF03           2A         COLHDG('通路代號')
+     A            WF04           5A         COLHDG('分店代號')
+     A            WF05           9A         COLHDG('產品代號')
+     A            WF06           6S 0       COLHDG('帳列庫存量')
+     A*
+     A          K WF01
+     A          K WF02
+     A          K WF03
+     A          K WF04
+     A          K WF05
+

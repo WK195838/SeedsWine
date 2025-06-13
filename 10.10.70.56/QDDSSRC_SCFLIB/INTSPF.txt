@@ -1,0 +1,22 @@
+     A*****************************************************************
+     A*          缺貨產品資料檔(INTSPF)    KEY=TS01+TS02+TS03
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R TS0
+     A            TS01      R               COLHDG('公司別')
+     A            TS02      R               COLHDG('通路代號')
+     A            TS03      R               COLHDG('產品代號')
+     A            TS04      R               COLHDG('預計到貨日')
+     A            TS05      R               COLHDG('缺貨數量')
+     A            TS06      R               COLHDG('備註')
+     A            TSVV      R               COLHDG('建檔日期')
+     A            TSWW      R               COLHDG('異動程式')
+     A            TSXX      R               COLHDG('異動日期')
+     A            TSYY      R               COLHDG('異動時間')
+     A            TSZZ      R               COLHDG('異動者　')
+     A*
+     A          K TS01
+     A          K TS02
+     A          K TS03
+

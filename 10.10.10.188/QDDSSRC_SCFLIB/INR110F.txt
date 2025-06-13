@@ -1,0 +1,19 @@
+     A          R WF0
+     A*
+     A            WF01           8S 0       COLHDG('調整日期')
+     A            WF02           9A         COLHDG('產品代號')
+     A            WF03          18O         COLHDG('產品簡稱')
+     A            WF04           5A         COLHDG('分店代號')
+     A            WF05          10O         COLHDG('分店簡稱')
+     A            WF06           2A         COLHDG('原因代碼')
+     A            WF07          32O         COLHDG('原因說明')
+     A            WF08           5S 0       COLHDG('調整數量')
+     A                                      EDTCDE(P)
+     A            WF09           9S 2       COLHDG('單位成本')
+     A                                      EDTCDE(P)
+     A            WF10          11S 2       COLHDG('調整金額')
+     A                                      EDTCDE(P)
+     A            WF11          13A         COLHDG('單據號碼')
+     A*
+     A          K WF01
+

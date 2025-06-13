@@ -1,0 +1,12 @@
+     A          R QD0
+     A*
+     A            QD01           9A         COLHDG('產品代號')
+     A            QD02          62O         COLHDG('品名')
+     A            QD03           9S 0       COLHDG('白標價')
+     A            QD04           9S 0       COLHDG('黃標價')
+     A            QD05          32O         COLHDG('活動促銷價')
+     A            QD05          32O         COLHDG('等級')
+     A            QD07           6S 0       COLHDG('陳列量')
+     A*
+     A          K QD01
+

@@ -1,0 +1,139 @@
+     H****************************************************************
+     H*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    *
+     H*                                                              *
+     H* PROGRAM-ID   : PUC0611                                       *
+     H* PROGRAM NAME :惠康調撥驗收月報表WORK FILE                  *
+     H* AUTHOR       : A1858  RACHEL                                 *
+     H* CREATE DATE  : 110/10/05                                     *
+     H* UPDATE DATE  :                                               *
+     H* SYSTEM       :西祺進銷存                                   *
+     H* SUBSYSTEM    :採購管理系統                                 *
+     H* REMARK       :                                           *
+     H****************************************************************
+     FINTCLF16IF  E           K        DISK
+     FINTDLF01IF  E           K        DISK
+     FMANEPF  IF  E           K        DISK
+     FMANCPF  IF  E           K        DISK
+     FPUC061WFO   E           K        DISK
+     FPUC061F UF  E           K        DISK                      A
+     E*--------------------------------------------------------------*
+     I           UDS
+     I                                      101 110 $USER
+     I                                      119 1240$EGMDY
+     I                                      162 1620$EVR
+     I                                      125 1270$CPY
+     I                                      201 2080$A8YMD
+     I* PROGRAM USE DATA DEFINE ++++++++++++++++++++++++++++++++++++++
+     I                                      598 5990$PRTID
+     I                                      600 600 DOWNL
+     I                                      601 602 DBG01
+     I                                      603 604 DBG02
+     I                                      605 6100DBG03S
+     I                                      611 6160DBG03E
+     I                                      617 621 DBG04S
+     I                                      622 626 DBG04E
+     I                                      627 635 DBG05S
+     I                                      636 644 DBG05E
+     I                                      651 6580DATES
+     I                                      661 6680DATEE
+     C*==============================================================*
+     C*                    KEY LIST
+     C*==============================================================*
+     C           KEYTD     KLIST
+     C                     KFLD           TC05             調撥單號
+     C*                    KFLD           TC02             通路代號
+     C*                    KFLD           TC07             分店代號
+     C*                    KFLD           TC06             入庫日期
+     C           KEYTD1    KLIST
+     C                     KFLD           TC01             公司別
+     C                     KFLD           TC02             通路代號
+     C                     KFLD           TC07             分店代號
+     C           KEY61     KLIST
+     C                     KFLD           WF02             分店代號
+     C                     KFLD           WF04             產品代號
+     C           KEYNE     KLIST
+     C                     KFLD           DBG01            公司別
+     C                     KFLD           DBG02            通路代號
+     C                     KFLD           WF02             分店代號
+     C           KEYNC     KLIST
+     C                     KFLD           DBG01            公司別
+     C                     KFLD           WF04             產品代號
+     C* =============================================================*
+     C*                    DEFN ROUTINE
+     C*==============================================================*
+     C*==============================================================*
+     C*                    MAIN ROUTINE
+     C*==============================================================*
+     C*
+     C                     EXSR R1000
+     C*
+     C                     SETON                     LR
+     C*
+     C*==============================================================*
+     C*          R1000 ....WRITE PUC061WF
+     C*==============================================================*
+01===C           R1000     BEGSR
+|    C* INIT
+     C           DBG05S    IFEQ *BLANK
+     C                     MOVEL*LOVAL    DBG05S
+     C                     END
+     C*
+     C           DBG05E    IFEQ *BLANK
+     C                     MOVEL*HIVAL    DBG05E
+     C                     END
+     C*
+     C           *LOVAL    SETLLTC0
+     C                     READ TC0                      40
+  01-C           *IN40     DOWEQ'0'
+    C           *LOVAL    SETLLTD0
+    C           KEYTD     CHAINTD0                  41
+    C           *IN41     DOWEQ'0'
+    C           TD10      IFGE DATES
+    C           TD10      ANDLEDATEE
+    C           TD02      IFGE DBG05S
+    C           TD02      ANDLEDBG05E
+    C                     Z-ADDTD10      WF01
+    C                     MOVELTD08      WF02
+    C                     MOVELTD02      WF04
+    C                     Z-ADDTD04      WFX6
+    C                     WRITEWFX0
+     C                     EXSR R1100
+    C                     ENDIF
+    C                     ENDIF
+    C           KEYTD     READETD0                      41
+  01-C                     ENDDO
+    C                     READ TC0                      40
+  01-C                     ENDDO
+     C*
+01===C                     ENDSR
+     C*==============================================================*
+     C*          R1100 ....A/U   PUC061F
+     C*==============================================================*
+02===C           R1100     BEGSR
+|    C*
+|    C           KEY61     SETLLWF0
+|    C           KEY61     CHAINWF0                  42
+| 01-C           *IN42     IFEQ '1'
+|    C           KEYNE     CHAINNE0                  43
+| 02-C           *IN43     IFEQ '0'
+|   C                     MOVELNE05      WF03      P       分店名稱
+|   C                     ELSE
+|   C                     MOVEL*BLANK    WF03
+| 02-C                     END
+|   C           KEYNC     CHAINNC0                  43
+| 03-C           *IN43     IFEQ '0'
+|   C                     MOVELNC05      WF05              產品名稱
+|   C                     ELSE
+|   C                     MOVEL*BLANK    WF05
+| 03-C                     ENDIF
+|   C*
+|   C                     Z-ADDWFX6      WF06
+|   C                     WRITEWF0
+| 01*C                     ELSE
+|   C                     ADD  WFX6      WF06              累計驗收數量
+|   C                     UPDATWF0
+| 01-C                     END
+|    C*
+02===C                     ENDSR
+     C*==============================================================*
+

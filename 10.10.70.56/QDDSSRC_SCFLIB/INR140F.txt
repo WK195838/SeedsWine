@@ -1,0 +1,11 @@
+     A          R WF0
+     A*
+     A            WF01           5A         COLHDG('供應商代號')
+     A            WF02           9A         COLHDG('產品代號')
+     A            WF03          18O         COLHDG('產品簡稱')
+     A            WF04           6S 0       COLHDG('借貨數量')
+     A            WF05          11S 2       COLHDG('使用金額')
+     A*
+     A          K WF01
+     A          K WF02
+

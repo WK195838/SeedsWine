@@ -1,0 +1,21 @@
+     A****************************************************************
+     A*          每月盤盈虧表                                      *
+     A****************************************************************
+     A          R WF0
+     A*
+     A            WF01           2A         COLHDG('公司')
+     A            WF02           2A         COLHDG('通路')
+     A            WF03           5A         COLHDG('分店代號')
+     A            WF03A         10O         COLHDG('分店簡稱')
+     A            WF04           8S 0       COLHDG('盤點日期')
+     A            WF05           9A         COLHDG('產品代號')
+     A            WF05A         18O         COLHDG('中文簡稱')
+     A            WF06           6S 0       COLHDG('庫存量')
+     A            WF07           6S 0       COLHDG('盤點量')
+     A            WF08           6S 0       COLHDG('差異量')
+     A*
+     A          K WF01
+     A          K WF02
+     A          K WF03
+     A          K WF05
+

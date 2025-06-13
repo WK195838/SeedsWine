@@ -1,0 +1,24 @@
+     A*****************************************************************
+     A*          上傳VIP銷售資料WORK FILE
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A          R WF0
+     A            WF01      R               COLHDG('分店代號')
+     A                                      REFFLD(SD03)
+     A            WF02      R               COLHDG('行動電話')
+     A                                      REFFLD(SD05)
+     A            WF03      R               COLHDG('銷售日期')
+     A                                      REFFLD(SD04)
+     A            WF04      R               COLHDG('產品代號')
+     A                                      REFFLD(SD06)
+     A            WF05      R               COLHDG('銷售數量')
+     A                                      REFFLD(SD07)
+     A            WF06      R               COLHDG('售價')
+     A                                      REFFLD(SD08)
+     A            WF07      R               COLHDG('購買目的')
+     A                                      REFFLD(SD09)
+     A          K WF01
+     A          K WF02
+     A          K WF03
+     A          K WF04
+

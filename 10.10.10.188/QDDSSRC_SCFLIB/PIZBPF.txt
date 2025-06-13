@@ -1,0 +1,27 @@
+     A*****************************************************************
+     A*          每月盤點明細檔(PIZBPF)      KEY=ZB01+ZB02+ZB03+
+     A*                                            ZB04+ZB05
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R ZB0
+     A*
+     A            ZB01      R               COLHDG('公司別')
+     A            ZB02      R               COLHDG('通路代號')
+     A            ZB03      R               COLHDG('盤點單號')
+     A            ZB04      R               COLHDG('供應商代號')
+     A            ZB05      R               COLHDG('產品代號')
+     A            ZB06      R               COLHDG('盤點數量')
+     A            ZB07      R               COLHDG('確認數量')
+     A            ZBVV      R               COLHDG('建檔日期')
+     A            ZBWW      R               COLHDG('異動程式')
+     A            ZBXX      R               COLHDG('異動日期')
+     A            ZBYY      R               COLHDG('異動時間')
+     A            ZBZZ      R               COLHDG('異動者　')
+     A*
+     A          K ZB01
+     A          K ZB02
+     A          K ZB03
+     A          K ZB04
+     A          K ZB05
+

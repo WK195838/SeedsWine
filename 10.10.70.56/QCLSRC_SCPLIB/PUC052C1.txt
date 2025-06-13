@@ -1,0 +1,104 @@
+     /****************************************************************/
+     /*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    */
+     /*                                                              */
+     /*    PROGRAM-ID   : PUC052C1                                   */
+     /*    PROGRAM NAME :調撥送貨單產生                            */
+     /*    AUTHOR       : HERNY                                      */
+     /*    CREATE DATE  : 2020/11/12                                 */
+     /*    UPDATE DATE  :                                            */
+     /*    SYSTEM       :惠康採購系統                              */
+     /*--------------------------------------------------------------*/
+     /****************************************************************/
+             PGM
+
+             DCL        VAR(&$EVR)   TYPE(*CHAR) LEN(1)
+             DCL        VAR(&A8YMD)  TYPE(*CHAR) LEN(8)
+
+             DCL        VAR(&DND01)    TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DND02)    TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DND03)    TYPE(*CHAR) LEN(6)
+             DCL        VAR(&DATES)    TYPE(*CHAR) LEN(8)
+             DCL        VAR(&DND04)    TYPE(*CHAR) LEN(13)
+             DCL        VAR(&DND03E)   TYPE(*CHAR) LEN(6)
+             DCL        VAR(&DATEE)    TYPE(*CHAR) LEN(8)
+             DCL        VAR(&$EVR)   TYPE(*CHAR) LEN(1)
+             DCL        VAR(&$CPY)   TYPE(*CHAR) LEN(3)
+             DCL        VAR(&$PRTID) TYPE(*CHAR) LEN(2)
+             DCL        VAR(&P6601I) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&P6602I) TYPE(*DEC)  LEN(1 0)
+             DCL        VAR(&P6603I) TYPE(*DEC)  LEN(3 0)
+             DCL        VAR(&P6604I) TYPE(*DEC)  LEN(2 0)
+
+
+             CHGVAR     VAR(&A8YMD)    VALUE(%SST(*LDA 201 8))
+             CHGVAR     VAR(&DND01)    VALUE(%SST(*LDA 601 2))
+             CHGVAR     VAR(&DND02)    VALUE(%SST(*LDA 603 2))
+             CHGVAR     VAR(&DND03)    VALUE(%SST(*LDA 611 6))
+             CHGVAR     VAR(&DATES)    VALUE(%SST(*LDA 621 8))
+             CHGVAR     VAR(&DND04)    VALUE(%SST(*LDA 631 13))
+             CHGVAR     VAR(&DND03E)   VALUE(%SST(*LDA 644 6))
+             CHGVAR     VAR(&DATEE)    VALUE(%SST(*LDA 650 8))
+
+             CLRPFM     FILE(PUC052F)
+             CPYF       FROMFILE(PUC052F) TOFILE(QTEMP/PUC052F) +
+                          CRTFILE(*YES)
+             MONMSG     MSGID(CPF2817) EXEC(CLRPFM FILE(QTEMP/PUC052F))
+             CHGPF      FILE(QTEMP/PUC052F) SIZE(*NOMAX)
+
+             OVRDBF     FILE(PUC052F)  SHARE(*YES)
+             OVRDBF     FILE(INTCLF11)   SHARE(*YES)
+             OVRDBF     FILE(INTCLF15)   SHARE(*YES)
+
+             IF COND(&DND04 *NE ' ') THEN(DO)
+             OPNQRYF    FILE((INTCLF15)) OPTION(*ALL) QRYSLT('        +
+                          TC01  = "' || &DND01 || '"                  +
+                        & TC02  = "' || &DND02 || '"                  +
+                        & TC05  = "' || &DND04 || '"')                +
+                          KEYFLD((TC05))
+ /* WRITE WORKFILE 單一調撥單號*/
+             CALL       PGM(PUC0523)
+                        ENDDO
+
+             ELSE  CMD(DO)
+             OPNQRYF    FILE((INTCLF11)) OPTION(*ALL) QRYSLT('        +
+                          TC01  = "' || &DND01 || '"                  +
+                        & TC02  = "' || &DND02 || '"                  +
+                        & TC03  = "' || &DATES || '"')                +
+                          KEYFLD((TC05))
+ /* WRITE WORKFILE 調撥日期 */
+             CALL       PGM(PUC0521)
+                        ENDDO
+
+ /* WRITE REPORT */
+             OVRPRTF FILE(PUC052P) PAGESIZE(*N 160) +
+                     USRDTA('調撥總表')
+             CALL       PGM(PUC0522)
+
+             RTVDTAARA  DTAARA(*LDA (162 1)) RTNVAR(&$EVR)
+             RTVDTAARA  DTAARA(*LDA (125 3)) RTNVAR(&$CPY)
+             RTVDTAARA  DTAARA(*LDA (598 2)) RTNVAR(&$PRTID)
+
+             CHGVAR     VAR(&P6601I) VALUE('PUC052P')
+             CHGVAR     VAR(&P6602I) VALUE(&$EVR)
+             CHGVAR     VAR(&P6603I) VALUE(&$CPY)
+             CHGVAR     VAR(&P6604I) VALUE(&$PRTID)
+             CALL       PGM(P66) PARM(&P6601I &P6602I &P6603I &P6604I)
+
+             IF COND(&DND04 *NE ' ') THEN(DO)
+                        CLOF       OPNID(INTCLF15)
+                        ENDDO
+             ELSE  CMD(DO)
+                        CLOF       OPNID(INTCLF11)
+                        ENDDO
+
+          /*將PUC052F 轉換成CSV FILE AND FTP TO PC */
+             CPYF       FROMFILE(QTEMP/PUC052F) +
+                          TOFILE(SCFLIB/PUC052F) MBROPT(*REPLACE)
+             MONMSG     MSGID(CPF2817) EXEC(GOTO END)
+
+          /* CALL       PGM(ECL100C) PARM('SCFLIB' 'PUC052F') */
+
+ END:
+             DLTOVR     FILE(*ALL)
+             ENDPGM
+

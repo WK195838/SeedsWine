@@ -1,0 +1,80 @@
+     /***************************************************************/
+     /*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250   */
+     /*                                                             */
+     /*    AUTHOR       : A1858 RACHEL                              */
+     /*    CREATE DATE  : 111/03/15                                 */
+     /*    UPDATE DATE  :                                           */
+     /*    PROGRAM NAME : PUC062C1                                  */
+     /*    SYSTEM       :西祺進銷存                               */
+     /*    SUBSYSTEM    :採購管理系統                             */
+     /*    REMARK       :前台人員排班月報表                       */
+     /*    NOTES        :                                         */
+     /*                                                             */
+     /***************************************************************/
+             PGM
+
+             DCL        VAR(&$EVR)   TYPE(*CHAR) LEN(1)
+             DCL        VAR(&$CPY)   TYPE(*CHAR) LEN(3)
+             DCL        VAR(&$PRTID) TYPE(*CHAR) LEN(2)
+             DCL        VAR(&P6601I) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&P6602I) TYPE(*DEC)  LEN(1 0)
+             DCL        VAR(&P6603I) TYPE(*DEC)  LEN(3 0)
+             DCL        VAR(&P6604I) TYPE(*DEC)  LEN(2 0)
+
+             DCL        VAR(&DBG01)  TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DBG02)  TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DBG03)  TYPE(*CHAR) LEN(4)
+             DCL        VAR(&DBG04S) TYPE(*CHAR) LEN(5)
+             DCL        VAR(&DBG04E) TYPE(*CHAR) LEN(5)
+             DCL        VAR(&DATE)   TYPE(*CHAR) LEN(6)
+             DCL        VAR(&SELECT) TYPE(*CHAR) LEN(1024)
+
+             CHGVAR     VAR(&DBG01)  VALUE(%SST(*LDA 601 2))
+             CHGVAR     VAR(&DBG02)  VALUE(%SST(*LDA 603 2))
+             CHGVAR     VAR(&DBG03)  VALUE(%SST(*LDA 605 4))
+             CHGVAR     VAR(&DBG04S) VALUE(%SST(*LDA 609 5))
+             CHGVAR     VAR(&DBG04E) VALUE(%SST(*LDA 614 5))
+             CHGVAR     VAR(&DATE)   VALUE(%SST(*LDA 619 6))
+             CHGVAR     VAR(&SELECT) VALUE('                       +
+                               L601 = "' || &DBG01 || '"           +
+                          *AND L602 = "' || &DBG02 || '"           +
+                          *AND L604 = "' || &DATE  || '"           +
+                          *AND L603 = %RANGE("' || &DBG04S || '"   +
+                                             "' || &DBG04E || '") ')
+
+        /*   CLRPFM   FILE(PUC061F)                */
+        /*   CLRPFM   FILE(PUC061WF)               */
+        /*   OVRDBF   FILE(PUC061F)   SHARE(*YES)  */
+        /*   OVRDBF   FILE(PUC061WF)  SHARE(*YES)  */
+             OVRDBF   FILE(UTL6LF01)  SHARE(*YES)
+
+             OPNQRYF  FILE((UTL6LF01)) OPTION(*ALL)         +
+                        QRYSLT(&SELECT) KEYFLD((L601) (L602) +
+                        (L604) (L603))
+
+    /*       CALL       PUC0621              */
+    /*       CLOF       OPNID(UTL6LF01)      */
+
+
+    /*       OPNQRYF    FILE((PUC061F)) QRYSLT(*ALL) KEYFLD(     +
+                          (WF02) (WF04) )     */
+
+             OVRPRTF    FILE(PUC062P) PAGESIZE(*N 80 ) CPI(15) +
+                          USRDTA('排班月報')
+             CALL       PUC0622
+
+             CLOF       OPNID(UTL6LF01)
+             DLTOVR     FILE(*ALL)
+
+             RTVDTAARA  DTAARA(*LDA (162 1)) RTNVAR(&$EVR)
+             RTVDTAARA  DTAARA(*LDA (125 3)) RTNVAR(&$CPY)
+             RTVDTAARA  DTAARA(*LDA (598 2)) RTNVAR(&$PRTID)
+
+             CHGVAR     VAR(&P6601I) VALUE('PUC062P')
+             CHGVAR     VAR(&P6602I) VALUE(&$EVR)
+             CHGVAR     VAR(&P6603I) VALUE(&$CPY)
+             CHGVAR     VAR(&P6604I) VALUE(&$PRTID)
+             CALL       PGM(P66) PARM(&P6601I &P6602I &P6603I &P6604I)
+
+             ENDPGM
+

@@ -1,0 +1,24 @@
+     A          R WF0
+     A*
+     A            WF01           8S 0       COLHDG('到貨運日期')
+     A            WF02           5A         COLHDG('分店代號')
+     A            WF03          10O         COLHDG('分店簡稱')
+     A            WF04           9A         COLHDG('產品代號')
+     A            WF05          18O         COLHDG('產品簡稱')
+     A            WF06          13A         COLHDG('驗收單號')
+     A            WF07           5A         COLHDG('供應商代號')
+     A            WF08          12O         COLHDG('供應商簡稱')
+     A            WF09           6S 0       COLHDG('採購數量')
+     A            WF10           6S 0       COLHDG('驗收數量')
+     A            WF11           6S 0       COLHDG('確認數量')
+     A            WF12           8S 2       COLHDG('單價')
+     A            WF13          11S 2       COLHDG('未稅金額')
+     A            WF14          11S 2       COLHDG('稅額')
+     A            WF15          13A         COLHDG('採購單號')
+     A            WF16           8S 0       COLHDG('到分店日期')
+     A            WF17           1A         COLHDG('狀態碼')
+     A*
+     A          K WF01
+     A          K WF02
+     A          K WF03
+

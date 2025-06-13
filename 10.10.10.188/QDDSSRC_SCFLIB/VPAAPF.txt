@@ -1,0 +1,25 @@
+     A*****************************************************************
+     A*          VIP資料檔(VPAAPF)   KEY=AA01+AA02
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R AA0
+     A            AA01      R               COLHDG('公司別')
+     A            AA02      R               COLHDG('行動電話')
+     A            AA03      R               COLHDG('客戶姓名')
+     A            AA04      R               COLHDG('性別')
+     A*                                     M-男
+     A*                                     F-女
+     A            AA05      R               COLHDG('聯絡地址')
+     A            AA06      R               COLHDG('狀態碼')
+     A*                                     A-有效
+     A*                                     B-無效
+     A            AAVV      R               COLHDG('建檔日期')
+     A            AAWW      R               COLHDG('異動程式')
+     A            AAXX      R               COLHDG('異動日期')
+     A            AAYY      R               COLHDG('異動時間')
+     A            AAZZ      R               COLHDG('異動者　')
+     A*
+     A          K AA01
+     A          K AA02
+

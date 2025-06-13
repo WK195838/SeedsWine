@@ -1,0 +1,98 @@
+     H****************************************************************
+     H*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    *
+     H*                                                              *
+     H*    PROGRAM-ID   : PUC0521                                    *
+     H*    PROGRAM NAME :調撥送貨單產生WORK FILE 調撥送貨單彙總表*
+     H*    AUTHOR       : CAROL                                      *
+     H*    CREATE DATE  : 2021/04/08                                 *
+     H*    UPDATE DATE  :                                            *
+     H*    SYSTEM       :惠康採購系統                              *
+     H****************************************************************
+     FINTTPF  UF  E           K        DISK                      A
+     FINTCLF11IF  E           K        DISK
+     FINTDPF  IF  E           K        DISK
+     FMANEPF  IF  E           K        DISK
+     FMANCPF  IF  E           K        DISK
+     FPUC052F O   E           K        DISK
+     E*--------------------------------------------------------------*
+     I           UDS
+     I                                      101 110 $USER
+     I                                      119 1240$DATE
+     I                                      162 1620$EVR
+     I                                      125 1270$CPY
+     I                                      201 2080$A8YMD
+     I* PROGRAM USE DATA DEFINE ++++++++++++++++++++++++++++++++++++++
+     I                                      601 602 DND01
+     I                                      603 604 DND02
+     I                                      611 6160DND03
+     I                                      621 6280DATES
+     I                                      631 643 DND04
+     I                                      644 6490DND03E
+     I                                      650 6570DATEE
+     C*==============================================================*
+     C*                    KEY LIST
+     C*==============================================================*
+     C           KEYNE     KLIST
+     C                     KFLD           TC01             公司別
+     C                     KFLD           TC02             通路代號
+     C                     KFLD           TC07             分店代號
+     C           KEYNC     KLIST
+     C                     KFLD           TD05             公司別
+     C                     KFLD           TD02             產品代號
+     C* =============================================================*
+     C*                    DEFN ROUTINE
+     C*==============================================================*
+     C*==============================================================*
+     C*                    MAIN ROUTINE
+     C*==============================================================*
+     C*
+     C           *LOVAL    SETLLTC0
+     C                     READ TC0                      40
+  01-C           *IN40     DOWEQ'0'
+    C           TC05      CHAINTT0                  40
+    C           *IN40     IFEQ '1'
+    C                     MOVELTC05      TT01
+    C                     Z-ADDDATES     TTVV
+    C                     MOVEL'PUC052'  TTWW
+    C                     Z-ADDDATES     TTXX
+    C                     TIME           TTYY
+    C                     MOVEL$USER     TTZZ
+    C                     WRITETT0
+    C                     ENDIF
+    C                     EXSR RTN100
+    C                     READ TC0                      40
+  01-C                     ENDDO
+     C*
+     C                     SETON                     LR
+     C*
+     C*==============================================================*
+     C*          RTN100....DETAIL
+     C*==============================================================*
+01===C           RTN100    BEGSR
+|    C*
+|    C                     Z-ADDTC03      WF01              調出日期
+|    C                     MOVELTC05      WF02              調撥單號
+|    C           KEYNE     CHAINNE0                  41
+| 01-C           *IN41     IFEQ '0'
+|   C                     MOVELNE05      WF04              分店名稱
+|   C                     MOVELNE06      WF09              送貨地址1
+|   C                     MOVELNE07      WF10              送貨地址2
+| 01-C                     ENDIF
+|    C           TC05      SETLLTD0
+|    C           TC05      READETD0                      44            L
+| 02-C           *IN44     DOWEQ'0'
+|   C                     MOVELTD02      WF05              產品代號
+|   C                     Z-ADDTD03      WF07              產品數量
+|   C           KEYNC     CHAINNC0                  41
+| 03-C           *IN41     IFEQ '0'
+|   C                     MOVELNC05      WF06              產品名稱
+|   C                     MOVELNC14      WF08              產品單位
+| 03-C                     ENDIF
+|   C                     MOVELTC07      WF03              分店代號
+|   C                     WRITEWF0
+|   C*
+|   C           TC05      READETD0                      44
+| 02-C                     ENDDO
+|    C*
+01===C                     ENDSR
+

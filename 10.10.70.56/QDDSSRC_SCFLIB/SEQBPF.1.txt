@@ -1,0 +1,32 @@
+     A          R QB0
+     A*
+     A            QB01           9A         COLHDG('產品代號')
+     A            QB02          62O         COLHDG('品名')
+     A            QB03           8S 2       COLHDG('標準未稅成本')
+     A            QB04A          8S 2       COLHDG('活動未稅成本1')
+     A            QB04B          8S 2       COLHDG('活動未稅成本2')
+     A            QB04C          8S 2       COLHDG('活動未稅成本3')
+     A            QB04D          8S 2       COLHDG('活動未稅成本4')
+     A            QB04E          8S 2       COLHDG('活動未稅成本5')
+     A            QB04F          8S 2       COLHDG('活動未稅成本6')
+     A            QB04G          8S 2       COLHDG('活動未稅成本7')
+     A            QB04H          8S 2       COLHDG('活動未稅成本8')
+     A            QB04I          8S 2       COLHDG('活動未稅成本9')
+     A            QB04J          8S 2       COLHDG('活動未稅成本10')
+     A            QB05           9S 0       COLHDG('含稅銷售金額')
+     A            QB06           5S 0       COLHDG('銷售數量')
+     A            QB07A          5S 0       COLHDG('活動銷售數量1')
+     A            QB07B          5S 0       COLHDG('活動銷售數量2')
+     A            QA07C          5S 0       COLHDG('活動銷售數量3')
+     A            QB07D          5S 0       COLHDG('活動銷售數量4')
+     A            QB07E          5S 0       COLHDG('活動銷售數量5')
+     A            QB07F          5S 0       COLHDG('活動銷售數量6')
+     A            QB07G          5S 0       COLHDG('活動銷售數量7')
+     A            QB07H          5S 0       COLHDG('活動銷售數量8')
+     A            QB07I          5S 0       COLHDG('活動銷售數量9')
+     A            QB07J          5S 0       COLHDG('活動銷售數量10')
+     A            QB08           9S 0       COLHDG('含稅銷貨成本')
+     A            QB09           5S 2       COLHDG('活動進價%')
+     A*
+     A          K QB01
+

@@ -1,0 +1,4 @@
+     A          R WF0
+     A*
+     A            WF01         256A         COLHDG('¤½¥q§O')
+

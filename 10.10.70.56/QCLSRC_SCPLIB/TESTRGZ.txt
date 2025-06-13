@@ -1,0 +1,4 @@
+             PGM
+             RGZPFM     FILE(SCFLIB/PIA9WF) KEYFILE(*FILE)
+             ENDPGM
+

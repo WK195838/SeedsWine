@@ -1,0 +1,35 @@
+     A*****************************************************************
+     A*        計算12/25庫存量工作檔(PIA9WF)
+     A*****************************************************************
+     A          R PA9
+     A            P901           2          COLHDG('公司別')
+     A            P902           2          COLHDG('通路代號')
+     A            P903           5          COLHDG('分店代號')
+     A            P903NM        48O         COLHDG('分店全稱')
+     A            P904           9          COLHDG('產品代號')
+     A            P904NM        18O         COLHDG('中文簡稱')
+     A            P905           8S 0       COLHDG('盤點日期')
+     A            P906          10          COLHDG('盤點單號')
+     A            P907           8  2       COLHDG('未稅成本')
+     A            P908           6  0       COLHDG('系統數量')
+     A            P909           6  0       COLHDG('盤點量')
+     A            P910           6  0       COLHDG('差異量')
+     A            P911          10  0       COLHDG('盤差金額')
+     A            P912           6  0       COLHDG('銷售數量')
+     A            P913           6  0       COLHDG('進貨數量')
+     A            P914           6  0       COLHDG('系統異動調整')
+     A            P915           6  0       COLHDG('實際庫存量')
+     A            P916           6  0       COLHDG('12/25系統庫存量')
+     A            P917           6  0       COLHDG('12/25盤盈虧數量')
+     A            P918           9  2       COLHDG('12/25盤盈虧金額')
+     A            P9WW          10          COLHDG('異動程式')
+     A            P9XX           8S 0       COLHDG('異動日期')
+     A            P9YY           6S 0       COLHDG('異動時間')
+     A            P9ZZ          10          COLHDG('異動者　')
+     A*
+     A          K P901
+     A          K P902
+     A          K P903
+     A          K P905
+     A          K P904
+

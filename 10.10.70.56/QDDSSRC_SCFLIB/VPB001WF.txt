@@ -1,0 +1,16 @@
+     A*****************************************************************
+     A*          上傳VIP明細資料WORK FILE
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A          R WF0
+     A            WF01      R               COLHDG('行動電話')
+     A                                      REFFLD(AA02)
+     A            WF02      R               COLHDG('客戶姓名')
+     A                                      REFFLD(AA03)
+     A            WF03      R               COLHDG('性別')
+     A                                      REFFLD(AA04)
+     A            WF04      R               COLHDG('聯絡地址')
+     A                                      REFFLD(AA05)
+     A          K WF01
+     A          K WF02
+

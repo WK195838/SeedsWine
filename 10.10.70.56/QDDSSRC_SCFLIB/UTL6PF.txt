@@ -1,0 +1,22 @@
+     A*****************************************************************
+     A*      惠康休假日定義檔(UTL6PF)        KEY=L601
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R L60
+     A            L601      R               COLHDG('公司別')
+     A            L602      R               COLHDG('通路代號')
+     A            L603      R               COLHDG('分店代號')
+     A            L604      R               COLHDG('年月份')
+     A            L605      R               COLHDG('內容')
+     A            L6VV      R               COLHDG('建檔日期')
+     A            L6WW      R               COLHDG('異動程式')
+     A            L6XX      R               COLHDG('異動日期')
+     A            L6YY      R               COLHDG('異動時間')
+     A            L6ZZ      R               COLHDG('異動者　')
+     A*
+     A          K L601
+     A          K L602
+     A          K L603
+     A          K L604
+

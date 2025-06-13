@@ -1,0 +1,12 @@
+     A          R QB0
+     A            QB01           9A         COLHDG('產品代號')
+     A            QB02          62O         COLHDG('品名')
+     A            QB03           8S 2       COLHDG('標準未稅成本')
+     A            QB04           8S 2       COLHDG('活動未稅成本')
+     A            QB05           9S 0       COLHDG('含稅銷售金額')
+     A            QB06           5S 0       COLHDG('銷售數量')
+     A            QB07           5S 0       COLHDG('活動銷售數量')
+     A            QB08           9S 0       COLHDG('含稅銷貨成本')
+     A            QB09           5S 2       COLHDG('活動進價%')
+     A            QB10           2A         COLHDG('活動序號')
+

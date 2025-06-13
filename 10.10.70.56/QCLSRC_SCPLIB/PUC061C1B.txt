@@ -1,0 +1,98 @@
+     /***************************************************************/
+     /*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250   */
+     /*                                                             */
+     /*    AUTHOR       : A1858 RACHEL                              */
+     /*    CREATE DATE  : 110/10/07                                 */
+     /*    UPDATE DATE  :                                           */
+     /*    PROGRAM NAME : PUC061C1                                  */
+     /*    SYSTEM       :西祺進銷存                               */
+     /*    SUBSYSTEM    :採購管理系統                             */
+     /*    REMARK       :惠康調撥驗收月報表                       */
+     /*    NOTES        :                                         */
+     /*                                                             */
+     /***************************************************************/
+             PGM
+
+             DCL        VAR(&$EVR)   TYPE(*CHAR) LEN(1)
+             DCL        VAR(&$CPY)   TYPE(*CHAR) LEN(3)
+             DCL        VAR(&$PRTID) TYPE(*CHAR) LEN(2)
+             DCL        VAR(&P6601I) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&P6602I) TYPE(*DEC)  LEN(1 0)
+             DCL        VAR(&P6603I) TYPE(*DEC)  LEN(3 0)
+             DCL        VAR(&P6604I) TYPE(*DEC)  LEN(2 0)
+
+             DCL        VAR(&DBG01)  TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DBG02)  TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DBG04S) TYPE(*CHAR) LEN(5)
+             DCL        VAR(&DBG04E) TYPE(*CHAR) LEN(5)
+             DCL        VAR(&DBG05S) TYPE(*CHAR) LEN(9)
+             DCL        VAR(&DBG05E) TYPE(*CHAR) LEN(9)
+             DCL        VAR(&DATES)  TYPE(*CHAR) LEN(8)
+             DCL        VAR(&DATEE)  TYPE(*CHAR) LEN(8)
+             DCL        VAR(&SELECT) TYPE(*CHAR) LEN(1024)
+
+             CHGVAR     VAR(&DBG01)  VALUE(%SST(*LDA 601 2))
+             CHGVAR     VAR(&DBG02)  VALUE(%SST(*LDA 603 2))
+             CHGVAR     VAR(&DBG04S) VALUE(%SST(*LDA 617 5))
+             CHGVAR     VAR(&DBG04E) VALUE(%SST(*LDA 622 5))
+             CHGVAR     VAR(&DBG05S) VALUE(%SST(*LDA 627 9))
+             CHGVAR     VAR(&DBG05E) VALUE(%SST(*LDA 636 9))
+             CHGVAR     VAR(&DATES)  VALUE(%SST(*LDA 651 8))
+             CHGVAR     VAR(&DATEE)  VALUE(%SST(*LDA 661 8))
+             CHGVAR     VAR(&SELECT) VALUE('                       +
+                               TC01 = "' || &DBG01 || '"           +
+                          *AND TC02 = "' || &DBG02 || '"           +
+                          *AND TC06 = %RANGE("' || &DATES  || '"   +
+                                             "' || &DATEE  || '")  +
+                          *AND TC07 = %RANGE("' || &DBG04S || '"   +
+                                             "' || &DBG04E || '") ')
+                    /*    *AND (TC09 *EQ "R" *OR TC09 *EQ "P") ')    */
+                    /*    *AND TC04 *EQ "W999"                     + */
+
+             CLRPFM   FILE(PUC061F)
+             CLRPFM   FILE(PUC061WF)
+             CPYF     FROMFILE(PUC061F) TOFILE(QTEMP/PUC061F) +
+                        CRTFILE(*YES)
+             MONMSG   MSGID(CPF2817) EXEC(CLRPFM FILE(QTEMP/PUC061F))
+             CPYF     FROMFILE(PUC061WF) TOFILE(QTEMP/PUC061WF) +
+                        CRTFILE(*YES)
+             MONMSG   MSGID(CPF2817) EXEC(CLRPFM FILE(QTEMP/PUC061F))
+
+             CHGPF    FILE(QTEMP/PUC061WF) SIZE(*NOMAX)
+             CHGPF    FILE(QTEMP/PUC061F) SIZE(*NOMAX)
+             OVRDBF   FILE(PUC061F)                        SHARE(*YES)
+             OVRDBF   FILE(PUC061WF)                        SHARE(*YES)
+             OVRDBF   FILE(INTCLF16)  SHARE(*YES)
+
+             OPNQRYF  FILE((INTCLF16)) OPTION(*ALL)         +
+                        QRYSLT(&SELECT) KEYFLD((TC01) (TC02) +
+                        (TC06) (TC07))
+
+             CALL       PUC0611
+             CLOF       OPNID(INTCLF16)
+             DLTOVR     FILE(PUC061WF)
+   /*  */
+
+
+             OPNQRYF    FILE((PUC061F)) QRYSLT(*ALL) KEYFLD(     +
+                          (WF02) (WF04) )
+
+             OVRPRTF    FILE(PUC061P) PAGESIZE(*N 72 ) CPI(15) +
+                          USRDTA('調撥驗收')
+             CALL       PUC0613
+
+             CLOF       OPNID(PUC061F)
+             DLTOVR     FILE(*ALL)
+
+             RTVDTAARA  DTAARA(*LDA (162 1)) RTNVAR(&$EVR)
+             RTVDTAARA  DTAARA(*LDA (125 3)) RTNVAR(&$CPY)
+             RTVDTAARA  DTAARA(*LDA (598 2)) RTNVAR(&$PRTID)
+
+             CHGVAR     VAR(&P6601I) VALUE('PUC061P')
+             CHGVAR     VAR(&P6602I) VALUE(&$EVR)
+             CHGVAR     VAR(&P6603I) VALUE(&$CPY)
+             CHGVAR     VAR(&P6604I) VALUE(&$PRTID)
+             CALL       PGM(P66) PARM(&P6601I &P6602I &P6603I &P6604I)
+
+             ENDPGM
+

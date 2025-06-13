@@ -1,0 +1,30 @@
+     /* 採購單寄出FLAG SETTING (SCDA01 7)  */
+
+         /*  PGM      PARM(&PARM1)  */
+             PGM      PARM(&PARM1 &RTNCD &RTNDSC)
+
+             DCL      VAR(&PARM1)  TYPE(*CHAR) LEN(1)  /*ON/OFF  */
+             DCL      VAR(&RTNCD)  TYPE(*CHAR) LEN(1)
+             DCL      VAR(&RTNDSC) TYPE(*CHAR) LEN(60)
+
+             IF       COND(&PARM1 *EQ '1') THEN(DO)
+             ALCOBJ     OBJ((*LIBL/POCHPF *FILE *EXCL)) WAIT(0)
+             MONMSG     MSGID(CPF1002) EXEC(DO)
+             CHGVAR     VAR(&RTNCD) VALUE('1')
+             CHGVAR     VAR(&RTNDSC) +
+             VALUE('採購單被使用中，無法執行採購單寄出作業，請稍待！')
+             RETURN
+             ENDDO
+             /* DEALLOCATE OBJECT    */
+             DLCOBJ     OBJ((*LIBL/POCHPF *FILE *EXCL))
+             ENDDO
+
+             IF       COND(&PARM1 *EQ '0') THEN(DO)
+             CHGDTAARA  DTAARA(SCDA01 (7   1)) VALUE('0')
+             ENDDO
+             ELSE IF  COND(&PARM1 *EQ '1') THEN(DO)
+             CHGDTAARA  DTAARA(SCDA01 (7   1)) VALUE('1')
+             ENDDO
+
+             ENDPGM
+

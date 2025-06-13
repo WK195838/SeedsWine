@@ -1,0 +1,6 @@
+     A          R AI0                       PFILE(DBAIPF)
+     A*
+     A          K AI01
+     A          K AI07A
+     A          K AI07B
+

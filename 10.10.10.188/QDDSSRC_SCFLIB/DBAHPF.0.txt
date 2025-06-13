@@ -1,0 +1,7 @@
+     A          R AH0
+     A*
+     A            AH01           5A         COLHDG('分店代號')
+     A            AH02           9S 0       COLHDG('獎金')
+     A*
+     A          K AH01
+

@@ -1,0 +1,14 @@
+     A          R AD0
+     A*
+     A            AD01           5A         COLHDG('分店代號')
+     A            AD02           9A         COLHDG('產品代號')
+     A            AD03          62O         COLHDG('品名')
+     A            AD04           9S 0       COLHDG('含稅銷售金額')
+     A            AD05           5S 0       COLHDG('銷售數量')
+     A            AD06           9S 2       COLHDG('抽成獎金')
+     A            AD07A          8S 0       COLHDG('銷售起日')
+     A            AD07B          8S 0       COLHDG('銷售迄日')
+     A*
+     A          K AD01
+     A          K AD02
+

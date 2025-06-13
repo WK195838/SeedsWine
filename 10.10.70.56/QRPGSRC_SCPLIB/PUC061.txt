@@ -1,0 +1,338 @@
+     A****************************************************************
+     A*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    *
+     A*                                                              *
+     A* PROGRAM NAME : PUC061                                        *
+     A* AUTHER       : A1858  RACHEL                                 *
+     A* CREATE DATE  : 110/10/05                                     *
+     A* UPDATE DATE  :                                               *
+     A* SYSTEM       :西祺進銷存                                   *
+     A* SUBSYSTEM    :採購管理系統                                 *
+     A* REMARK       :惠康調撥驗收月報表                           *
+     A*===============================================================
+     A* MODI CODE |   DATE   | DESCRIPTION
+     A*---------------------------------------------------------------
+     A****************************************************************
+     FPA#BPF  IF  E           K        DISK
+     FMANCPF  IF  E           K        DISK
+     FMANDPF  IF  E           K        DISK
+     FPUC061D CF  E                    WORKSTN
+     F                                              KINFDS DSPFDS
+     ILDA        UDS
+     I                                      101 110 $USER
+     I                                      119 1240$EGMDY
+     I                                      162 1620$EVR
+     I                                      125 1270$CPY
+     I                                      135 135 $ADD
+     I                                      598 5990$PRTID
+     I                                      600 600 DOWNL
+     I                                      601 602 DBG01
+     I                                      603 604 DBG02
+     I                                      605 6100DBG03S
+     I                                      611 6160DBG03E
+     I                                      617 621 DBG04S
+     I                                      622 626 DBG04E
+     I                                      627 635 DBG05S
+     I                                      636 644 DBG05E
+     I                                      651 6580DATES
+     I                                      661 6680DATEE
+     I*
+     I* FOR F4 HELP -- GET CURSOR POSITION
+     IDSPFDS      DS
+     I                                    B 370 3710#CSR
+      *==============================================================*
+      *          IDENTIFY A PARAMETER LIST
+      *==============================================================*
+     C           *ENTRY    PLIST
+     C           *IN03     PARM *IN03     IN03    1
+     C           *IN98     PARM *IN98     IN98    1
+     C           *IN97     PARM *IN97     IN97    1
+      *==============================================================*
+      *                    KLIST
+      *==============================================================*
+     C           KEYNC     KLIST
+     C                     KFLD           DBG01            公司別
+     C                     KFLD           NC02             產品代號
+     C*
+     C           KEYND     KLIST
+     C                     KFLD           DBG01            公司別
+     C                     KFLD           DBG02            通路代號
+      *==============================================================*
+      *                    MAIN ROUTINE
+      *==============================================================*
+     C  N97N98             EXSR RTN010                     .INIT SCREEN
+  01-C           *IN03     DOUEQ'1'
+    C           *IN88     OREQ '1'
+    C                     EXFMTDSPD1
+    C                     MOVEA*ALL'0'   *IN,60
+    C                     MOVEL*BLANK    DOWNL
+  02-C           *IN03     IFEQ '0'
+     C*
+    C           *IN04     CASEQ'1'       RTNF4
+  03*C                     CAS            RTN100           .CHECK
+    C                     ENDCS                                       ?
+    C*  F7 DOWNLOAD*
+  04-C           *IN99     IFEQ '0'
+    C           *IN07     ANDEQ'1'
+    C                     SETOF                     88
+    C                     CALL 'PUC061C2'
+  04-C                     ENDIF
+  02-C                     ENDIF
+  01-C                     ENDDO
+     C*
+     C                     EXSR OUTLDA
+     C*
+     C   03                SETON                     LR
+     C                     RETRN
+      *===============================================================*
+      *          RTN010....INIT SCREEN
+      *===============================================================*
+01===C           RTN010    BEGSR
+|    C*
+|    C           *NAMVAR   DEFN *LDA      LDA
+|    C                     IN   LDA
+|    C*
+|    C                     Z-ADD2         $EVR
+|    C*
+|    C                     MOVE *BLANK    DBG01
+|    C                     MOVE *BLANK    D#B03
+|    C                     MOVE *BLANK    DBG02
+|    C                     MOVE *BLANK    DND04
+|    C                     MOVE *BLANK    DBG04S
+|    C                     MOVE *BLANK    DBG04E
+|    C                     MOVE *BLANK    DBG05S
+|    C                     MOVE *BLANK    DBG05E
+|    C                     Z-ADD0         DBG03S
+|    C                     Z-ADD0         DBG03E
+|    C                     Z-ADD0         DATES   80
+|    C                     Z-ADD0         DATEE   80
+|    C                     MOVEL'SCR001'  APPSCR  6
+|    C*
+01===C                     ENDSR
+      *===============================================================*
+      *          RTN100....CHECK SCREEN
+      *===============================================================*
+02===C           RTN100    BEGSR
+|    C**公司別
+| 01-C           DBG01     IFEQ *BLANKS
+|   C                     SETON                     60  99
+|   C                     MOVEL'ERR0001' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+|   C                     MOVEL*BLANK    D#B03
+| 01-C                     END
+|    C   99                GOTO END100
+|    C*
+|    C           DBG01     CHAINPA#BPF               40
+| 02-C           *IN40     IFEQ '0'
+|   C                     MOVEL#B03      D#B03
+| 02*C                     ELSE
+|   C                     SETON                     6099
+|   C                     MOVEL*BLANK    D#B03
+|   C                     MOVEL'ERR0018' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 02-C                     END
+|    C   99                GOTO END100
+|    C**通路
+| 03-C           DBG02     IFEQ *BLANK
+|   C                     MOVEL*BLANK    DND04
+|   C                     MOVEL'ERR0001' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+|   C                     SETON                     6199
+| 03-C                     END
+|    C   99                GOTO END100
+|    C*
+|    C           KEYND     CHAINND0                  40
+| 04-C           *IN40     IFEQ '0'
+|   C                     MOVELND04      DND04
+| 04*C                     ELSE
+|   C                     SETON                     6199
+|   C                     MOVEL*BLANK    DND04
+|   C                     MOVEL'ERR0019' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 04-C                     END
+|    C   99                GOTO END100
+|    C*
+|    C**驗收日期
+| 05-C           DBG03S    IFEQ 0
+|   C                     Z-ADD010192    DBG03S
+| 05*C                     ELSE
+|   C                     CALL 'P30'
+|   C                     PARM DBG03S    P3001I  80
+|   C                     PARM '3'       P3002I  1
+|   C                     PARM '1'       P3003I  1
+|   C                     PARM           P3011O  1
+| 06-C           P3011O    IFEQ 'N'
+|   C                     SETON                     62  99
+|   C                     MOVEL'ERR0004' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 06-C                     END
+| 05-C                     END
+|    C   99                GOTO END100
+|    C*
+| 07-C           DBG03E    IFEQ 0
+|   C                     Z-ADD123129    DBG03E
+| 07*C                     ELSE
+|   C                     CALL 'P30'
+|   C                     PARM DBG03E    P3001I  80
+|   C                     PARM '3'       P3002I  1
+|   C                     PARM '1'       P3003I  1
+|   C                     PARM           P3011O  1
+| 08-C           P3011O    IFEQ 'N'
+|   C                     SETON                     63  99
+|   C                     MOVEL'ERR0004' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 08-C                     END
+| 07-C                     END
+|    C   99                GOTO END100
+|    C**
+|    C                     CALL 'P31'
+|    C                     PARM DBG03S    P3101I  80
+|    C                     PARM '3'       P3102I  1
+|    C                     PARM '1'       P3103I  1
+|    C                     PARM '2'       P3104I  1
+|    C                     PARM '1'       P3105I  1
+|    C           DATES     PARM           P3101O  80
+|    C*
+|    C                     CALL 'P31'
+|    C                     PARM DBG03E    P3101I  80
+|    C                     PARM '3'       P3102I  1
+|    C                     PARM '1'       P3103I  1
+|    C                     PARM '2'       P3104I  1
+|    C                     PARM '1'       P3105I  1
+|    C           DATEE     PARM           P3101O  80
+|    C*
+| 09-C           DATES     IFGT DATEE
+|   C                     SETON                     626399
+|   C                     MOVEL'ERR0005' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 09-C                     END
+|    C   99                GOTO END100
+|    C*
+|    C**分店代號
+| 10-C           DBG04S    IFEQ *BLANKS
+|   C                     MOVE *LOVAL    DBG04S
+| 10-C                     END
+|    C*
+| 11-C           DBG04E    IFEQ *BLANKS
+|   C                     MOVE *HIVAL    DBG04E
+| 11-C                     END
+|    C*
+| 12-C           DBG04S    IFGT DBG04E
+|   C                     SETON                     646599
+|   C                     MOVEL'ERR0005' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 12-C                     END
+|    C   99                GOTO END100
+|    C*
+|    C**產品代號
+| 13-C           DBG05S    IFEQ *BLANKS
+|   C                     MOVE *LOVAL    DBG05S
+| 13*C                     ELSE
+| 14-C           DBG05S    IFNE *LOVAL
+|   C                     MOVELDBG05S    NC02
+|   C           KEYNC     CHAINNC0                  40
+| 15-C           *IN40     IFEQ '1'
+|   C                     SETON                     6699
+|   C                     MOVEL'ERR0029' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 15 C                     END
+| 14 C                     END
+| 13-C                     END
+|   C   99                GOTO END100
+|    C*
+| 16-C           DBG05E    IFEQ *BLANKS
+|   C                     MOVE *HIVAL    DBG05E
+| 16*C                     ELSE
+| 17-C           DBG05E    IFNE *HIVAL
+|   C                     MOVELDBG05E    NC02
+|   C           KEYNC     CHAINNC0                  40
+| 18-C           *IN40     IFEQ '1'
+|   C                     SETON                     6799
+|   C                     MOVEL'ERR0029' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 18-C                     END
+| 17-C                     END
+| 16-C                     END
+|    C   99                GOTO END100
+|    C*
+| 19-C           DBG05S    IFGT DBG05E
+|   C                     SETON                     666799
+|   C                     MOVEL'ERR0005' ERRID
+|   C                     MOVEL'SCMF'    ERRF
+| 19-C                     END
+|    C   99                GOTO END100
+|    C*
+|    C                     SETON                     88
+02===C           END100    ENDSR
+      *===============================================================*
+      *          RTNF4 ....F4 HELP
+      *===============================================================*
+03===C           RTNF4     BEGSR
+|    C*
+|    C                     SETOF                     88
+|    C********************
+|    C*  GET ROW,COL     *
+|    C********************
+|    C           #CSR      DIV  256       D#ROW            *ROW
+|    C                     MVR            D#COL            *COL
+|    C** 游標位置即為(D#ROW,D#COL)
+| 01-C           APPSCR    IFEQ 'SCR001'
+|   C*
+|   C*分店代號
+| 02-C           D#ROW     IFEQ 12
+|   C           D#COL     ANDGE36
+|   C           D#COL     ANDLE40
+|   C                     CALL 'SWD003'
+|   C                     PARM           DBG01
+|   C                     PARM           DBG02
+|   C                     PARM           DBG04S
+|   C                     GOTO ENDF4
+| 02-C                     END
+|    C*
+| 03-C           D#ROW     IFEQ 12
+|   C           D#COL     ANDGE44
+|   C           D#COL     ANDLE48
+|   C                     CALL 'SWD003'
+|   C                     PARM           DBG01
+|   C                     PARM           DBG02
+|   C                     PARM           DBG04E
+|   C                     GOTO ENDF4
+| 03-C                     END
+|    C*
+| 04-C           D#ROW     IFEQ 14
+|   C           D#COL     ANDGE36
+|   C           D#COL     ANDLE44
+|   C                     CALL 'SWD005'
+|   C                     PARM DBG01     D0051I  2
+|   C           DBG05S    PARM DBG05S    D0052I  9
+| 04-C                     END
+|     *
+| 05-C           D#ROW     IFEQ 14
+|   C           D#COL     ANDGE48
+|   C           D#COL     ANDLE56
+|   C                     CALL 'SWD005'
+|   C                     PARM DBG01     D0051I  2
+|   C           DBG05E    PARM DBG05E    D0052I  9
+| 05-C                     END
+|     *
+| 06-C           D#ROW     IFEQ 19
+|   C           D#COL     ANDGE36
+|   C           D#COL     ANDLE37
+|   C                     CALL 'WDS011'
+|   C           $PRTID    PARM $PRTID    S011O1  20
+|   C                     GOTO ENDF4
+| 06-C                     END
+|    C*
+| 01-C                     END
+|    C*
+03===C           ENDF4     ENDSR
+      *===============================================================*
+      *          OUTLDA....OUT LDA
+      *===============================================================*
+04===C           OUTLDA    BEGSR
+|    C*
+|    C                     OUT  *NAMVAR
+|    C*
+04===C           ENDLDA    ENDSR
+      *===============================================================*
+     C/COPY HBP2CVTR
+

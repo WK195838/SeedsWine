@@ -1,0 +1,21 @@
+     A*****************************************************************
+     A*          存貨調撥主檔
+     A*****************************************************************
+     A                                      JDFTVAL
+     A          R TC0                       JFILE(INTTPF INTCPF)
+     A          J                           JOIN(INTTPF INTCPF)
+     A                                      JFLD(TT01 TC05)
+     A*
+     A            TC01                      COLHDG('公司別')
+     A            TC02                      COLHDG('通路代號')
+     A            TC03                      COLHDG('調出日期')
+     A            TC04                      COLHDG('出貨分店代號')
+     A            TT01                      COLHDG('調撥單號')
+     A            TC06                      COLHDG('入庫日期')
+     A            TC07                      COLHDG('收貨分店代號')
+     A            TC08                      COLHDG('單據來源')
+     A            TC09                      COLHDG('狀態碼')
+     A*
+     A          K TT01
+     A*               調撥單號
+

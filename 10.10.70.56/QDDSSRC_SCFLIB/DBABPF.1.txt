@@ -1,0 +1,32 @@
+     A          R AB0
+     A*
+     A            AB01           9A         COLHDG('產品代號')
+     A            AB02          62O         COLHDG('品名')
+     A            AB03           8S 2       COLHDG('標準未稅成本')
+     A            AB04           9S 0       COLHDG('含稅銷售金額')
+     A            AB05           5S 0       COLHDG('銷售數量')
+     A            AB06           9S 0       COLHDG('含稅銷貨成本')
+     A            AB07           5S 2       COLHDG('活動進價%')
+     A            AB08A          8S 2       COLHDG('活動未稅成本1')
+     A            AB08B          8S 2       COLHDG('活動未稅成本2')
+     A            AB08C          8S 2       COLHDG('活動未稅成本3')
+     A            AB08D          8S 2       COLHDG('活動未稅成本4')
+     A            AB08E          8S 2       COLHDG('活動未稅成本5')
+     A            AB08F          8S 2       COLHDG('活動未稅成本6')
+     A            AB08G          8S 2       COLHDG('活動未稅成本7')
+     A            AB08H          8S 2       COLHDG('活動未稅成本8')
+     A            AB08I          8S 2       COLHDG('活動未稅成本9')
+     A            AB08J          8S 2       COLHDG('活動未稅成本10')
+     A            AB09A          5S 0       COLHDG('活動銷售數量1')
+     A            AB09B          5S 0       COLHDG('活動銷售數量2')
+     A            AB09C          5S 0       COLHDG('活動銷售數量3')
+     A            AB09D          5S 0       COLHDG('活動銷售數量4')
+     A            AB09E          5S 0       COLHDG('活動銷售數量5')
+     A            AB09F          5S 0       COLHDG('活動銷售數量6')
+     A            AB09G          5S 0       COLHDG('活動銷售數量7')
+     A            AB09H          5S 0       COLHDG('活動銷售數量8')
+     A            AB09I          5S 0       COLHDG('活動銷售數量9')
+     A            AB09J          5S 0       COLHDG('活動銷售數量10')
+     A*
+     A          K AB01
+

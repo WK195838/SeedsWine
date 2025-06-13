@@ -1,0 +1,12 @@
+     A          R AE0
+     A*
+     A            AE01           9A         COLHDG('產品代號')
+     A            AE02          62O         COLHDG('品名')
+     A            AE03           9S 0       COLHDG('白標價')
+     A            AE04           9S 0       COLHDG('黃標價')
+     A            AE05          20O         COLHDG('活動促銷價')
+     A            AE06          10O         COLHDG('等級')
+     A            AE07           6S 0       COLHDG('陳列量')
+     A*
+     A          K AE01
+

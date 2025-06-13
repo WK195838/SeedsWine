@@ -1,0 +1,19 @@
+     A          R WF0
+     A*
+     A            WF01           8S 0       COLHDG('銷售日期')
+     A            WF02           5A         COLHDG('分店代號')
+     A            WF03          10O         COLHDG('分店簡稱')
+     A            WF04           9A         COLHDG('產品代號')
+     A            WF05          18O         COLHDG('產品簡稱')
+     A            WF06           6S 0       COLHDG('銷售數量')
+     A            WF07           8S 2       COLHDG('單價')
+     A            WF08          11S 2       COLHDG('未稅金額')
+     A            WF09          11S 2       COLHDG('含稅金額')
+     A            WF10          13A         COLHDG('銷售無庫單號')
+     A            WF11          13A         COLHDG('銷售序號')
+     A            WF12           1A         COLHDG('狀態碼')
+     A*
+     A          K WF01
+     A          K WF02
+     A          K WF03
+

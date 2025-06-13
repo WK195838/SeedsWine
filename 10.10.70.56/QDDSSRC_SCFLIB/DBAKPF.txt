@@ -1,0 +1,15 @@
+     A          R AK0
+     A*
+     A            AK01           5A         COLHDG('供應商代號')
+     A            AK02           5S 0       COLHDG('編號')
+     A            AK03           9A         COLHDG('產品代號')
+     A            AK04           7S 0       COLHDG('進貨數量')
+     A            AK05           7S 0       COLHDG('退貨數量')
+     A            AK06           7S 0       COLHDG('淨進貨量')
+     A            AK07          11S 2       COLHDG('進貨金額')
+     A            AK08          11S 2       COLHDG('退貨金額')
+     A            AK09          11S 2       COLHDG('進貨淨額')
+     A*
+     A          K AK01
+     A          K AK03
+

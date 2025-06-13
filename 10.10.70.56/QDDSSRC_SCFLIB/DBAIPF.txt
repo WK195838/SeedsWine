@@ -1,0 +1,14 @@
+     A          R AI0
+     A*
+     A            AI01           9A         COLHDG('產品代號')
+     A            AI02           9S 0       COLHDG('含稅銷售金額')
+     A            AI03           5S 0       COLHDG('銷售數量')
+     A            AI04           5S 0       COLHDG('有效數量')
+     A            AI05           9S 0       COLHDG('發放獎金')
+     A            AI06A          8S 0       COLHDG('銷售起日')
+     A            AI06B          8S 0       COLHDG('銷售迄日')
+     A            AI07A          8S 0       COLHDG('活動日期起')
+     A            AI07B          8S 0       COLHDG('活動日期迄')
+     A*
+     A          K AI01
+

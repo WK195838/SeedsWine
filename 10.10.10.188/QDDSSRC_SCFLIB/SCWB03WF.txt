@@ -1,0 +1,29 @@
+     A*****************************************************************
+     A*    WEB訂貨單工作檔LOG(SCWB03WF)     KEY=WB0301-WB0302
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A          R WB03
+     A            WB0301    R               COLHDG('人員代號')
+     A                                      REFFLD(NF01)
+     A            WB0302    R               COLHDG('產品代號')
+     A                                      REFFLD(CE03)
+     A            WB0303    R               COLHDG('訂貨數量')
+     A                                      REFFLD(CE04)
+     A            WB0304    R               COLHDG('供應商代號')
+     A                                      REFFLD(CE02)
+     A            WB0305    R               COLHDG('到店日期')
+     A                                      REFFLD(CD08)
+     A            WB0306    R               COLHDG('分店代號')
+     A                                      REFFLD(CD04)
+     A            WB0307    R               COLHDG('到貨上下午')
+     A                                      REFFLD(CD09)
+     A            WB0308    R               COLHDG('訂貨單號')
+     A                                      REFFLD(CE01)
+     A            WB0309         1          COLHDG('MODE')
+     A            WB0310    R               COLHDG('異動日期')
+     A                                      REFFLD(CEXX)
+     A            WB0311    R               COLHDG('異動時間')
+     A                                      REFFLD(CEYY)
+     A          K WB0301
+     A          K WB0302
+

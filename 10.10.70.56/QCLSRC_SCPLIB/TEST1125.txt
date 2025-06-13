@@ -1,0 +1,5 @@
+             PGM        PARM(&RCDNBR)
+             DCL        VAR(&RCDNBR) TYPE(*DEC) LEN(10 0)
+             RTVMBRD    FILE(C#ELPF) NBRCURRCD(&RCDNBR)
+             ENDPGM
+

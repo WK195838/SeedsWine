@@ -1,0 +1,6 @@
+     A          R AJ0                       PFILE(DBAJPF)
+     A*
+     A          K AJ01
+     A          K AJ03A
+     A          K AJ03B
+

@@ -1,0 +1,22 @@
+     A****************************************************************
+     A*          銷貨成本表(明細表產品)                          *
+     A****************************************************************
+     A          R WF0
+     A*
+     A            WF01L          9A         COLHDG('產品代號')
+     A            WF01LA        18O         COLHDG('產品簡稱')
+     A            WF02L          5A         COLHDG('分店代號')
+     A            WF02LA        18O         COLHDG('分店簡稱')
+     A            WF03L          9S 0       COLHDG('銷貨數量')
+     A            WF04L          9S 0       COLHDG('銷貨金額-未稅' )
+     A            WF05L          4S 2       COLHDG('銷售佔比')
+     A            WF06L         11S 2       COLHDG('銷貨成本-未稅' )
+     A            WF07L         11S 2       COLHDG('銷貨利潤-未稅' )
+     A            WF08L          4S 2       COLHDG('獲利率')
+     A            WF09L          4S 2       COLHDG('毛利率')
+     A            WF10L          5A         COLHDG('供應商代號起')
+     A            WF11L          5A         COLHDG('供應商代號迄')
+     A            WF12L          8S 0       COLHDG('銷售起')
+     A            WF13L          8S 0       COLHDG('銷售迄')
+     A            WF14L          2A         COLHDG('產品歸屬')
+

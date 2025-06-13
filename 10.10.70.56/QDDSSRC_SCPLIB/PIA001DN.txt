@@ -1,0 +1,82 @@
+     A****************************************************************
+     A*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    *
+     A*                                                              *
+     A*    DSPF NAME    : PIA001D                                    *
+     A*    AUTHOR       : A1492  TERRY                               *
+     A*    CREATE DATE  : 100/01/26                                  *
+     A*    UPDATE DATE  :                                            *
+     A*    PROGRAM NAME : PIA0011                                    *
+     A*    SYSTEM       :西祺進銷存                                *
+     A*    SUBSYSTEM    :盤點系統                                  *
+     A*    REMARK       :盤盈虧計算                                *
+     A*===============================================================
+     A* MODI CODE |   DATE   | DESCRIPTION
+     A*---------------------------------------------------------------
+     A* 00A RACHEL 110/10/21新增通路別判斷
+     A****************************************************************
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/SCRF)
+     A                                      MSGLOC(24)
+     A                                      PRINT
+     A          R DSPD1
+     A                                      CSRLOC(D#ROW      D#COL)
+     A                                      CA03(03 '結束執行')
+     A                                      CF14(14 '處理作業')
+     A                                      KEEP
+     A            D#ROW          3S 0H
+     A            D#COL          3S 0H
+     A                                  1  2'PIA001'
+     A                                  1 26MSGCON(030 USC9999 *LIBL/SCMF)
+     A                                      DSPATR(HI)
+     A                                  1 62'日期:'
+     A            $DATE          6Y 0O  1 70EDTCDE(Y)
+     A                                  2  2'SCR001'
+     A                                  2 34'盤盈虧計算'
+     A                                      DSPATR(HI)
+     A                                  2 62'時間:'
+     A                                  2 70TIME
+     A                                      EDTWRD('  :  :  ')
+     A                                  3 62' USER :'
+     A            $USER         10A  O  3 70
+     A                                  6 26'公司代號:'
+     A                                      COLOR(BLU)
+     A            DPI01     R        B  6 38REFFLD(EH01)
+     A  61                                  DSPATR(PC RI)
+     A            D#B03     R   -4   O  6 41REFFLD(#B03 PA#BPF)
+     A                                      COLOR(BLU)
+ 00A+A                                  8 26'通路代號:'
+ 00A+A                                      COLOR(BLU)
+ 00A+A            DPI03     R        B  8 38REFFLD(NI02)
+ 00A+A  63                                  DSPATR(PC RI)
+ 00A+A            SND04     R   -4   O  8 41REFFLD(ND04 MANDPF)
+ 00A+A                                      COLOR(BLU)
+     A                                 10 26'盤點年月:'
+     A                                      COLOR(BLU)
+     A            DPI02          4Y 0B 10 38EDTWRD('  /  ')
+     A  62                                  DSPATR(PC RI)
+     A                                 10 45'(月／年)'
+     A                                      COLOR(BLU)
+     A                                 12 17'+----------------------------------
+     A                                      --------------+'
+     A                                 13 17'|'
+     A                                 13 65'|'
+     A                                 14 17'|請按F14以便處理此作業，否則按-
+     A                                      F3結束此作業|'
+     A                                 15 17'|'
+     A                                 15 65'|'
+     A                                 16 17'+----------------------------------
+     A                                      --------------+'
+     A                                 22  2'執行'
+     A                                      COLOR(BLU)
+     A                                    +1'F3 =回主畫面'
+     A                                      COLOR(BLU)
+     A                                    +1'F14 =作業處理'
+     A                                      COLOR(BLU)
+     A*
+     A            ERRID          7A  H
+     A            ERRF          10A  H
+     A  99        ERRMSG        60A  O 24  2MSGID(&ERRID &ERRF)
+     A                                      DSPATR(HI)
+     A                                 24 66MSGCON(014 USC9998 *LIBL/SCMF)
+     A                                      DSPATR(HI)
+

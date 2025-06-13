@@ -1,0 +1,20 @@
+     A*****************************************************************
+     A*          分店產品資料檔(MANHPF)    KEY=NH01+NH02+NH03+NH04
+     A*****************************************************************
+     A                                      REF(SCRF)
+     A                                      UNIQUE
+     A          R NI0
+     A            NI01      R               COLHDG('公司別')
+     A            NI02      R               COLHDG('通路代號')
+     A            NI03      R               COLHDG('分店代號')
+     A            NI04      R               COLHDG('銷售天數')
+     A            NIVV      R               COLHDG('建檔日期')
+     A            NIWW      R               COLHDG('異動程式')
+     A            NIXX      R               COLHDG('異動日期')
+     A            NIYY      R               COLHDG('異動時間')
+     A            NIZZ      R               COLHDG('異動者　')
+     A*
+     A          K NI01
+     A          K NI02
+     A          K NI03
+

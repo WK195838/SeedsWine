@@ -1,0 +1,110 @@
+     A*%%TS  SD  20210909  103036  SCPGMR      REL-V5R4M0  5722-WDS
+     A****************************************************************
+     A*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    *
+     A*                                                              *
+     A*    PROGRAM-ID   : PUC052D                                    *
+     A*    PROGRAM NAME :調撥送貨單產生                            *
+     A*    AUTHOR       : A1491 EASON                                *
+     A*    CREATE DATE  : 2008/10/27                                 *
+     A*    UPDATE DATE  :                                            *
+     A*    SYSTEM       :西祺進銷存                                *
+     A****************************************************************
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      REF(*LIBL/SCRF)
+     A                                      MSGLOC(22)
+     A                                      PRINT
+     A          R DSPD1
+     A                                      CSRLOC(#LIN       #COL)
+     A                                      CA03(03)
+     A                                      CF04(04)
+     A                                      CF14(14)
+     A  28                                  FRCDTA
+     A  28                                  LOCK
+     A            #LIN           3S 0H
+     A            #COL           3S 0H
+     A                                  1  2'<PUC052D>'
+     A                                  1 26MSGCON(030 USC9999 *LIBL/SCMF)
+     A                                      DSPATR(HI)
+     A                                  1 63'日期:'
+     A            $DATE          6Y 0O  1 71EDTCDE(Y)
+     A                                  2  2'SCR001'
+     A                                  2 32'調撥送貨單產生'
+     A                                      DSPATR(HI)
+     A                                  2 63'時間:'
+     A                                  2 71TIME
+     A                                      EDTWRD('  :  :  ')
+     A                                  3 63' USER :'
+     A            $USER         10A  O  3 71
+     A                                  5 21'公司代號:'
+     A                                      COLOR(BLU)
+     A                                      DSPATR(HI)
+     A            DND01     R        B  5 33REFFLD(ND01)
+     A  61                                  DSPATR(PC)
+     A  61                                  DSPATR(RI)
+     A            D#B03     R        O  5 36REFFLD(#B03 PA#BPF)
+     A                                      COLOR(BLU)
+     A                                  7 21'通路代號:'
+     A                                      COLOR(BLU)
+     A            DND02     R        B  7 33REFFLD(ND02)
+     A  62                                  DSPATR(PC)
+     A  62                                  DSPATR(RI)
+     A            ND02N     R        O  7 36REFFLD(ND04)
+     A                                      COLOR(BLU)
+     A                                  9 21'以下擇一輸入:'
+     A                                 10 21'調撥出貨日期:'
+     A                                      COLOR(BLU)
+     A            DND03          6  0B 10 37EDTWRD('  /  /  ')
+     A  63                                  DSPATR(PC)
+     A  63                                  DSPATR(RI)
+     A                                 10 46'(MM/DD/YY)'
+     A                                      COLOR(BLU)
+     A                                 10 57'列印調撥送貨單彙總表'
+     A*                                     COLOR(BLU)
+     A                                 12 21'調撥單號:'
+     A                                      COLOR(BLU)
+     A            DND04     R        B 12 33REFFLD(TC05)
+     A  64                                  DSPATR(PC)
+     A  64                                  DSPATR(RI)
+     A                                 12 57'列印單一調撥送貨單'
+     A*                                     COLOR(BLU)
+     A*
+     A                                 17 24'執行環境  :'
+     A                                      COLOR(BLU)
+     A            $EVR           1Y 0B 17 38VALUES(0 1)
+     A                                      EDTCDE(3)
+     A                                      CHECK(RB)
+     A N31                                  DSPATR(UL)
+     A  31                                  DSPATR(PR)
+     A                                 17 43'(0-查詢 1-即時)'
+     A                                      COLOR(BLU)
+     A                                 18 24'列印份數  :'
+     A                                      COLOR(BLU)
+     A            $CPY           3Y 0B 18 38EDTCDE(3)
+     A                                      CHECK(RB)
+     A                                 19 24'列表機　  :'
+     A                                      DSPATR(HI)
+     A            $PRTID         2Y 0B 19 38CHECK(RB)
+     A                                      DSPATR(HI)
+     A                                      EDTCDE(3)
+     A*
+     A  28                             21 29'*** 處理中，請稍候 ***'
+     A                                      DSPATR(RI)
+     A                                      DSPATR(BL)
+     A                                      DSPATR(HI)
+     A                                 23  2'執行'
+     A                                      COLOR(BLU)
+     A                                 23 10'F3 =回主畫面'
+     A                                      COLOR(BLU)
+     A                                 23 26'F14 =處理作業'
+     A                                      COLOR(BLU)
+     A            ERRID          7A  H
+     A            ERRF          10A  H
+     A  99        ERRMSG        62A  O 24  2MSGID(&ERRID &ERRF)
+     A                                 24 66MSGCON(014 USC9998 *LIBL/SCMF)
+     A                                      DSPATR(HI)
+     A  98        ERR1          50A  O 24  2MSGID(UPT 2140 PTMF)
+     A                                      DSPATR(HI)
+     A  97        ERR2          50A  O 24  2MSGID(UPT 2110 PTMF)
+     A                                      DSPATR(HI)
+

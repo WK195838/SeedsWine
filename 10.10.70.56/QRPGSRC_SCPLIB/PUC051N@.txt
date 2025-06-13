@@ -1,0 +1,379 @@
+     H****************************************************************
+     H*   泛太資訊科技開發股份有限公司－版權所有     TEL:7313250     *
+     H*                                                              *
+     H*    PROGRAM-ID   : PUC051                                     *
+     H*    PROGRAM NAME :調撥單維護  (A/U/D/I)                       *
+     H*    AUTHOR       : RACHEL                                     *
+     H*                 :                                            *
+     H*    CREATE DATE  : 2021/04/22                                 *
+     H*    UPDATE       :                                            *
+     H*    SYSTEM       : 西祺進銷存                                 *
+     H*    SUBSYSTEM    : 採購管理系統                               *
+     H*
+     H****************************************************************
+     FSLCMMP  IF  E           K        DISK
+     F            CMM0                              KRENAMECM0
+     FSLCMML5 IF  E           K        DISK
+     F            CMM0                              KRENAMECM05
+     FSLCMML6 IF  E           K        DISK
+     F            CMM0                              KRENAMECM06
+     FSLCMML8 IF  E           K        DISK
+     F            CMM0                              KRENAMECM08
+     FSLCMML9 IF  E           K        DISK
+     F            CMM0                              KRENAMECM09
+     FELEMP   IF  E           K        DISK
+     FPT#YPF  IF  E           K        DISK
+     FSLI112D CF  E                    WORKSTN      KINFDS DSPFDS
+     F                                        RRN   KSFILE SFLSR
+     E*===============================================================*
+     I*DATA AREA
+     IPTDA01      DS
+     I                                        1   1 $PFMT
+     I                                        2   2 $PTYPE
+     I*
+     I*CURSOR POSITION
+     IDSPFDS      DS
+     I                                    B 370 3710#CSR
+     I                                    B 378 3790#DRRN
+     I*LOCAL DATA AREA
+     ILDA        UDS
+     I                                      101 110 $USER
+     I                                      210 2160DDATE
+     I                                      139 139 $RMK01
+     I                                      141 141 $RMK03
+     I                                      152 161 $USERN
+     I                                      173 176 $COR
+     I                                      177 177 $DEPT
+     I                                      178 178 $AREA
+     I                                      201 2080$A8YMD
+     I                                      209 2160$C8YMD
+     I                                      201 2060$A8YM
+     I*
+     I*DEFIND STRAT KEY
+     I            DS
+     I                                        1  42 @KNOO
+     I            DS
+     I                                        1  42 @KNON
+     I                                        1   1 DMM01
+     I                                        2   9 DMM03
+     I                                       10  29 DMM06
+     I                                       30  37 DMM09
+     I                                       38  42 DMM20
+     C*==============================================================*
+     C*                    DEFN
+     C*==============================================================*
+     C           *NAMVAR   DEFN *LDA      LDA
+     C           *NAMVAR   DEFN           PTDA01
+     C*
+     C           *LIKE     DEFN RRN       @DRCD            DSP REC NUM
+     C           *LIKE     DEFN RRN       @PRCD            PAGE REC
+     C*==============================================================*
+     C*                    *ENTRY PLIST
+     C*==============================================================*
+     C*          *ENTRY    PLIST
+     C*          DMM01     PARM           P111I1  1        事業處
+     C*          DMM03     PARM           P111I2  8        客戶代號
+     C*                    PARM           @RTNC   2         FUN KEY
+     C*==============================================================*
+     C*                    KEY LIST
+     C*==============================================================*
+     C*SLCMMP
+     C           KEYCM1    KLIST
+     C                     KFLD           DMM01            事業處
+     C           KEYCM5    KLIST
+     C                     KFLD           DMM01            事業處
+     C                     KFLD           DMM03            客戶代號
+     C           KEYCM6    KLIST
+     C                     KFLD           DMM01            事業處
+     C                     KFLD           DMM06            客戶簡稱
+     C           KEYCM8    KLIST
+     C                     KFLD           DMM01            事業處
+     C                     KFLD           DMM09            統編
+     C           KEYCM9    KLIST
+     C                     KFLD           DMM01            事業處
+     C                     KFLD           DMM20            業務代號
+     C           KEYCMA    KLIST
+     C                     KFLD           DMM01            事業處
+     C                     KFLD           DMM09            統編
+     C                     KFLD           DMM20            業務代號
+     C           KEYCMB    KLIST
+     C                     KFLD           DMM01            事業處
+     C                     KFLD           DMM06            客戶簡稱
+     C                     KFLD           DMM20            業務代號
+     C*PT#YPF
+     C           KEY#Y     KLIST
+     C                     KFLD           W#Y01  10         代碼欄位
+     C                     KFLD           W#Y02  10         代碼編號
+     C*==============================================================*
+     C*                    MAIN ROUTINE
+     C*==============================================================*
+     C                     EXSR R0100                      *INITIAL
+     C*
+  01-C           *IN03     DOWEQ'0'
+    C                     EXSR R1000                      *SCR PROCESS
+  01-C                     END
+     C*
+     C                     SETON                     LR
+     C*==============================================================*
+     C*          R0100 ....INITIAL VALUE
+     C*==============================================================*
+01===C           R0100     BEGSR
+|    C*
+|    C                     IN   LDA
+|    C                     IN   PTDA01
+|    C* SCREEN INIT VALUE SET *--------------------------------------*
+|    C*
+|    C                     EXSR R1A00                      .SFL INIT
+|    C*
+01===C                     ENDSR
+     C*==============================================================*
+     C*          R1000 ....SCREEN PROCESS
+     C*==============================================================*
+02===C           R1000     BEGSR
+|    C*
+|    C                     WRITEDSPC1
+|    C                     EXFMTSFLCR
+|    C                     MOVEA*ALL'0'   *IN,60
+|    C*
+| 01-C           *IN03     IFEQ '1'                        *END
+|   C                     GOTO E1000
+| 01-C                     END
+|    C*
+| 02-C*          *IN12     IFEQ '1'                        *PREVIOUS
+|   C*                    SETON                     60
+|   C*                    EXSR R0100
+| 02-C*                    END
+|    C*
+| 03-C           *IN25     IFEQ '1'                        *NEXT PAGE
+|   C                     EXSR R1N00
+|   C                     GOTO E1000
+| 03-C                     END
+|    C*
+| 04-C           @KNOO     IFNE @KNON                      *START KEY
+|   C                     EXSR R1A00                      *SFL INIT
+|   C                     GOTO E1000
+| 04-C                     END
+|    C*
+|    C                     EXSR R1C00                      *OPTION
+|    C*
+02===C           E1000     ENDSR
+     C*==============================================================*
+     C*          R1A00 ....SUBFILE INIT PREPARE
+     C*==============================================================*
+03===C           R1A00     BEGSR
+|    C*
+|    C                     Z-ADD0         DRRN
+|    C                     Z-ADD0         RRN
+|    C                     Z-ADD0         @DRCD            *DSP RCD
+|    C                     MOVEL'N'       @BOTOM  1        *BOTTOM
+|    C*
+|    C                     SETON                     52    *SFLCLR
+|    C                     WRITESFLCR
+|    C                     SETOF                     52
+|    C*
+|    C                     SETON                     51    *SFLDSPCTL
+|    C                     SETOF                     5053  *SFLDSP,END
+|    C*
+|    C                     EXSR R1A20                      *SFL HEAD
+|    C   99                GOTO E1A00
+|    C* <<SFL INITIAITAL DATA ADD>>
+|    C                     MOVEL@KNON     @KNOO            *KEY SAVE
+|    C                     Z-ADD7         @PRCD            .PAGE SIZE
+|    C                     MOVE *BLANK    DOPT
+|    C*------------------------------------------------------------***
+|    C*檢查欄位是否輸入以決定KEY值
+|    C                     SELEC
+| 1- C           DMM03     WHNE *BLANK
+| 1- C           KEYCM5    SETLLCM05                       *客戶代號為主
+|    C*
+| 2- C           DMM03     WHEQ *BLANK                     *未輸入檢索條件
+| |  C           DMM06     ANDEQ*BLANK                     *以事業別查詢
+| |  C           DMM09     ANDEQ*BLANK
+| |  C           DMM20     ANDEQ*BLANK
+| 2- C           KEYCM1    SETLLCM0
+|    C*
+| 3- C           DMM06     WHNE *BLANK                     *輸入客戶名稱
+| 3- C           KEYCM6    SETLLCM06
+|    C*
+| 4- C           DMM09     WHNE *BLANK                     *輸入統一編號
+| 4- C           KEYCM8    SETLLCM08
+|    C*
+| 5- C           DMM20     WHNE *BLANK                     *輸入業務代號
+| 5- C           KEYCM9    SETLLCM09
+|    C*
+|    C                     ENDSL
+|    C*------------------------------------------------------------***
+|    C*
+|    C                     EXSR R1A10                      *ADD SFL DTA
+|    C*
+| 06-C           RRN       IFGT 0
+|   C                     SETON                     50    *SFLDSP
+| 06*C                     ELSE
+|   C                     SETON                     99    *NO DTA
+|   C                     MOVEL'UPT2050' ERRID
+|   C                     MOVEL'PTMF'    ERRF
+| 06-C                     END
+|    C*
+03===C           E1A00     ENDSR
+     C*=============================================================*
+     C*          R1A10 .... ADD SUBFILE DATA
+     C*=============================================================*
+04===C           R1A10     BEGSR
+|    C*
+|    C                     ADD  @PRCD     @DRCD
+|    C*
+| 01-C           RRN       DOWLT@DRCD
+|    C*
+|    C*根據輸入欄位讀取檔案
+|    C                     SELEC
+|  2-C           DMM03     WHNE *BLANK
+|  | C*                    SETON                     97
+|  2-C           KEYCM1    READECM05                     46*客戶代號為主
+|    C*
+|  3-C           DMM03     WHEQ *BLANK                     *未輸入檢索條件
+|  | C           DMM06     ANDEQ*BLANK                     *以事業別查詢
+|  | C           DMM09     ANDEQ*BLANK
+|  | C           DMM20     ANDEQ*BLANK
+|  3-C           KEYCM1    READECM0                      46
+|    C*
+|  4-C           DMM06     WHNE *BLANK                      *輸入客戶名稱
+|  | C*                    SETON                     97
+|  4-C           KEYCM1    READECM06                     46
+|    C*
+|  5-C           DMM09     WHNE *BLANK                      *輸入統一編號
+|  | C*                    SETON                     97
+|  5-C           KEYCM8    READECM08                     46
+|    C*
+|  6-C           DMM20     WHNE *BLANK                      *輸入業務代號
+|  6-C           KEYCM9    READECM09                     46
+|    C*
+|    C                     ENDSL
+|    C*------------------------------------------------------------****
+|  7-C           *IN46     IFEQ '0'
+|  | C                     EXSR R1A11                      *WRITE SFL
+|  7*C                     ELSE                            *EOF
+|  | C                     Z-ADDRRN       @DRCD
+|  | C                     MOVE 'Y'       @BOTOM
+|  | C                     SETON                       53  *SFLEND
+| 07-C                     END
+|    C*
+| 01-C                     END
+|    C*
+|    C                     Z-ADDRRN       DRRN
+|    C*
+04===C                     ENDSR
+     C*=============================================================*
+     C*          R1A11 .... WRITE SUBFILE DATA
+     C*=============================================================*
+05===C           R1A11     BEGSR
+|    C*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|    C* << SUBFILE DATA VALUE SET >>
+|    C                     MOVEL*BLANK    CMM20N
+|    C                     MOVEL*BLANK    CMM11N
+|    C                     MOVEL*BLANK    CMM02N
+| 01-C           CMM03     IFNE *BLANK
+|    C*業務姓名
+|    C           CMM20     CHAINEMPR                 40
+|  2-C           *IN40     IFEQ '0'
+|  | C                     MOVELEMPR2     CMM20N 10 P
+|  2-C                     END
+|    C*
+|    C*業別
+|    C                     MOVEL'CMM11'   W#Y01     P
+|    C                     MOVELCMM11     W#Y02     P
+|    C           KEY#Y     CHAIN#Y0                  40
+|  3-C           *IN40     IFEQ '1'
+|  | C                     MOVE *BLANK    CMM11N 10 P
+|  3*C                     ELSE
+|  | C                     MOVEL#Y03      CMM11N
+|  3-C                     END
+|    C*
+|    C*地區別
+|    C                     MOVEL'CMM02'   W#Y01     P
+|    C                     MOVELCMM02     W#Y02     P
+|    C           KEY#Y     CHAIN#Y0                  40
+|  4-C           *IN40     IFEQ '1'
+|  | C                     MOVE *BLANK    CMM02N  6 P
+|  | C                     ELSE
+|  | C                     MOVEL#Y03      CMM02N
+|  4-C                     END
+|    C*
+| 01-C                     END
+|    C*暫停送貨日
+|    C                     CALL 'P31'
+|    C                     PARM CMM19     P3101I  80
+|    C                     PARM '2'       P3102I  1
+|    C                     PARM '1'       P3103I  1
+|    C                     PARM $PFMT     P3104I  1
+|    C                     PARM $PTYPE    P3105I  1
+|    C                     PARM           P3101O  80
+|    C                     Z-ADDP3101O    DMM19
+|    C*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|    C                     ADD  1         RRN
+|    C*                    SETON                       54
+|    C                     WRITESFLSR                    46
+|    C*
+05===C                     ENDSR
+     C*=============================================================*
+     C*          R1A20 .... SFL HEADING (SFL CONTROL DATA PREPARE)
+     C*=============================================================*
+06===C           R1A20     BEGSR
+|    C*
+|    C                     MOVEL$DEPT     DMM01     P
+|    C                     MOVEL'CMM01'   W#Y01     P
+|    C                     MOVELDMM01     W#Y02     P
+|    C           KEY#Y     CHAIN#Y0                  40
+| 01-C           *IN40     IFEQ '1'
+| |  C                     MOVE *BLANK    DMM01N 10 P      事業處
+| 01*C                     ELSE
+| |  C                     MOVEL#Y03      DMM01N
+| 01-C                     END
+|    C*
+06===C                     ENDSR
+     C*=============================================================*
+     C*          R1C00 ...挑選資料
+     C*=============================================================*
+07===C           R1C00     BEGSR
+|    C*
+|    C                     READCSFLSR                  4242
+| 01-C           *IN42     DOWEQ'0'
+|   C*
+| 02-C*          *IN97     IFEQ '1'
+| |  C           DOPT      IFEQ '/'
+| |  C                     SETON                     42
+| |  C*                    MOVEL*BLANK    DOPT
+| |  C*                    MOVELCMM03     DMM03
+| |  C*                    MOVELCMM06     DMM06
+| |  C*                    MOVELCMM09     DMM09
+| |  C*                    MOVELCMM20     DMM20
+|    C*                    MOVEL@KNON     @KNOO            *KEY SAVE
+| |  C*                    WRITEDSPC1
+| |  C*                    EXFMTSFLCR
+|    C*                    WRITESFLSR
+| 02-C                     END
+|    C*
+|    C  N42                READCSFLSR                    42
+| 01-C                     END
+|    C*
+07===C                     ENDSR
+     C*==============================================================*
+     C*          R1E00 ...欄位查詢 (PF04 : CALL SUB-PROGRAM)
+     C*==============================================================*
+     C**         R1E00     BEGSR
+     C**
+     C**                   ENDSR
+     C*=============================================================*
+     C*          R1N00 ....ROLLUP MAIN ROUTINE
+     C*=============================================================*
+08===C           R1N00     BEGSR
+|    C*
+| 01-C           @BOTOM    IFEQ 'Y'                        *EOF
+|   C                     SETON                         96*LST PAG
+|   C                     Z-ADDRRN       DRRN
+| 01*C                     ELSE
+|   C                     EXSR R1A10                      *ADD SFL DTA
+| 01-C                     END
+|    C*
+08===C                     ENDSR
+     C*==============================================================*
+

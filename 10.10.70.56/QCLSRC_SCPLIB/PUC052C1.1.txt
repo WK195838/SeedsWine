@@ -1,0 +1,53 @@
+     /****************************************************************/
+     /*   泛太資訊科技開發股份有限公司－版權所有    TEL:7313250    */
+     /*                                                              */
+     /*    PROGRAM-ID   : PUC052C2                                   */
+     /*    PROGRAM NAME :調撥送貨單產生                            */
+     /*    AUTHOR       : HERNY                                      */
+     /*    CREATE DATE  : 2020/11/12                                 */
+     /*    UPDATE DATE  :                                            */
+     /*    SYSTEM       :惠康採購系統                              */
+     /*--------------------------------------------------------------*/
+     /****************************************************************/
+             PGM
+
+             DCL        VAR(&$EVR)   TYPE(*CHAR) LEN(1)
+             DCL        VAR(&A8YMD)  TYPE(*CHAR) LEN(8)
+
+             DCL        VAR(&DND01)    TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DND02)    TYPE(*CHAR) LEN(2)
+             DCL        VAR(&DND03)    TYPE(*CHAR) LEN(6)
+             DCL        VAR(&DATES)    TYPE(*CHAR) LEN(8)
+
+             CHGVAR     VAR(&A8YMD)    VALUE(%SST(*LDA 201 8))
+             CHGVAR     VAR(&DND01)    VALUE(%SST(*LDA 601 2))
+             CHGVAR     VAR(&DND02)    VALUE(%SST(*LDA 603 2))
+             CHGVAR     VAR(&DND03)    VALUE(%SST(*LDA 611 6))
+             CHGVAR     VAR(&DATES)    VALUE(%SST(*LDA 621 8))
+
+             CLRPFM     FILE(PUC052F)
+             CPYF       FROMFILE(PUC052F) TOFILE(QTEMP/PUC052F) +
+                          CRTFILE(*YES)
+             MONMSG     MSGID(CPF2817) EXEC(CLRPFM FILE(QTEMP/PUC052F))
+             CHGPF      FILE(QTEMP/PUC052F) SIZE(*NOMAX)
+             OVRDBF     FILE(PUC052F)  SHARE(*YES)
+
+             OVRDBF     FILE(INTCLF11)   SHARE(*YES)
+             OPNQRYF    FILE((INTCLF11)) OPTION(*ALL) QRYSLT('        +
+                          TC01  = "' || &DND01 || '"                  +
+                        & TC02  = "' || &DND02 || '"                  +
+                        & TC03  = "' || &DATES || '"')                +
+                          KEYFLD((TC05))
+
+             CALL       PGM(PUC0521)
+
+             CLOF       OPNID(INTCLF11)
+             DLTOVR     FILE(*ALL)
+
+             RTVDTAARA  DTAARA(*LDA (162 1)) RTNVAR(&$EVR)
+
+          /*將PUC052F 轉換成CSV FILE AND FTP TO PC */
+          /* CALL       PGM(ECL100C) PARM('SCFLIB' 'PUC052F') */
+
+             ENDPGM
+
